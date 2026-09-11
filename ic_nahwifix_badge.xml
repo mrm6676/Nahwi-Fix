@@ -1,0 +1,24 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Outer circle border with bottom-right notch accent matching NahwiFix logo -->
+    <path
+        android:pathData="M24,4 C35.046,4 44,12.954 44,24 C44,29.3 41.9,34.1 38.5,37.6 L36.2,35.3 C39.1,32.3 40.8,28.3 40.8,24 C40.8,14.72 33.28,7.2 24,7.2 C14.72,7.2 7.2,14.72 7.2,24 C7.2,33.28 14.72,40.8 24,40.8 C27.1,40.8 30,39.9 32.5,38.4 L34.3,41.1 C31.3,42.9 27.8,44 24,44 C12.954,44 4,35.046 4,24 C4,12.954 12.954,4 24,4 Z"
+        android:fillColor="#FFFFFF"/>
+    <!-- Small checkmark tick at the bottom right accent -->
+    <path
+        android:pathData="M37,42.5 L39.8,44 L43.5,39"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+    <!-- Central verification checkmark -->
+    <path
+        android:pathData="M15,24.5 L21.5,31 L32.5,18"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+</vector>

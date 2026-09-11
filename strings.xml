@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NahwiFix</string>
+    <string name="tagline">Arabic Grammar &amp; Punctuation Checker</string>
+    <string name="tagline_ar">مصحح النحو والترقيم العربي</string>
+
+    <!-- Navigation -->
+    <string name="nav_checker">المصحح</string>
+    <string name="nav_rules">القواعد</string>
+    <string name="nav_pricing">الأسعار</string>
+    <string name="nav_account">الحساب</string>
+    <string name="nav_terms">الشروط</string>
+
+    <!-- Checker Screen -->
+    <string name="checker_title">تحسين وتدقيق النصوص العربية</string>
+    <string name="checker_subtitle">افحص الأخطاء النحوية، الإملائية، والترقيمية بدقة فورية.</string>
+    <string name="input_placeholder">تحدث معي أو اكتب نصك هنا...</string>
+    <string name="btn_check">ابدأ فحص نصك</string>
+    <string name="btn_clear">مسح</string>
+    <string name="btn_copy">نسخ النص المصحح</string>
+    <string name="btn_apply_all">تطبيق جميع التصحيحات</string>
+
+    <!-- Options & Attachments -->
+    <string name="opt_deep_think">فكّر قبل الرد</string>
+    <string name="opt_upload_image">تحميل صورة</string>
+    <string name="opt_upload_audio">تحميل صوت</string>
+    <string name="opt_upload_video">تحميل فيديو</string>
+    <string name="opt_read_aloud">قم بتوليد الصوت</string>
+
+    <!-- Write with AI -->
+    <string name="write_with_ai_title">الكتابة بالذكاء الاصطناعي</string>
+    <string name="write_with_ai_subtitle">صياغة نصوص عربية فصيحة، رسائل، مقالات وإعادة صياغة باحترافية</string>
+    <string name="write_with_ai_prompt_hint">صف ما تريد كتابته، أو اختر قالب صياغة...</string>
+    <string name="write_with_ai_btn_generate">اكتب الآن بالذكاء الاصطناعي</string>
+    <string name="write_with_ai_btn_apply">تطبيق في المحرر</string>
+    <string name="write_with_ai_btn_append">إلحاق بالنص</string>
+    <string name="write_with_ai_tone_formal">رسمي وفصيح</string>
+    <string name="write_with_ai_tone_creative">إبداعي وبلاغي</string>
+    <string name="write_with_ai_tone_concise">موجز ومباشر</string>
+    <string name="write_with_ai_tone_academic">أكاديمي رصين</string>
+    <string name="write_with_ai_tone_persuasive">إقناعي مؤثر</string>
+
+    <!-- Stats & Categories -->
+    <string name="stat_words">كلمات</string>
+    <string name="stat_characters">أحرف</string>
+    <string name="stat_issues">مشاكل</string>
+    <string name="cat_grammar">النحو والمطابقة</string>
+    <string name="cat_punctuation">علامات الترقيم</string>
+    <string name="cat_spelling">الإملاء والهمزات</string>
+    <string name="cat_tanween">التنوين والإعراب</string>
+
+    <!-- Inspector -->
+    <string name="inspector_title">تفاصيل التصحيح</string>
+    <string name="label_issue">المشكلة</string>
+    <string name="label_suggestion">الاقتراح</string>
+    <string name="label_explanation">التفسير النحوي</string>
+    <string name="btn_apply">تطبيق هذا التصحيح</string>
+
+    <!-- Reader Mode & Accessibility -->
+    <string name="reader_mode_title">وضع القارئ الصوتي الميسر</string>
+    <string name="reader_mode_subtitle">مخصص لمساعدة غير القادرين على القراءة وضعاف البصر مع نطق صوتي فوري وتكبير النص</string>
+    <string name="reader_mode_listen_input">استمع للنص الأصلي</string>
+    <string name="reader_mode_listen_corrected">استمع للنص المصحح</string>
+    <string name="reader_mode_stop">إيقاف القراءة</string>
+    <string name="reader_mode_font_size">حجم الخط المريح</string>
+    <string name="reader_mode_high_contrast">تباين ألوان عالٍ</string>
+    <string name="reader_mode_speaking">جارٍ القراءة الصوتية الآن...</string>
+
+    <!-- Microphone / Voice Dictation -->
+    <string name="dictation_mic_btn">الإملاء الصوتي بالمايكروفون</string>
+    <string name="dictation_listening">جارٍ الاستماع لإملائك الصوتي باللغة العربية...</string>
+    <string name="dictation_stop">إيقاف الإملاء الصوتي</string>
+    <string name="dictation_hint">تحدث باللغة العربية وسيتم تحويل صوتك إلى نص مدقق فوراً</string>
+    <string name="dictation_permission_required">يلزم السماح باستخدام المايكروفون للإملاء الصوتي</string>
+    <string name="dictation_error">تعذر التعرف على الصوت أو أن المايكروفون غير متوفر</string>
+
+    <!-- Pricing -->
+    <string name="pricing_title">اختر الخطة المناسبة لك</string>
+    <string name="pricing_subtitle">خطط مرنة تمنحك الأدوات التي تحتاجها لكتابة عربية أدق.</string>
+    <string name="plan_free">الخطة الأساسية</string>
+    <string name="plan_free_price">مجاناً دائماً</string>
+    <string name="plan_pro">الخطة المتقدمة</string>
+    <string name="plan_pro_price">$9 / شهرياً</string>
+
+    <!-- Auth -->
+    <string name="sign_in">تسجيل الدخول</string>
+    <string name="create_account">إنشاء حساب جديد</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="username">اسم المستخدم</string>
+</resources>
