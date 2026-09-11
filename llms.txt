@@ -1,0 +1,11 @@
+# NahwiFix
+
+> Check and correct Arabic grammar and punctuation mistakes instantly. Write better in Arabic with NahwiFix's intelligent tools.
+
+## Pages
+
+- [Terms Conditions](https://nahwifix-apiruv.teleporthq.app/terms-conditions)
+- [create an account page](https://nahwifix-apiruv.teleporthq.app/create-an-account-page)
+- [Arabic](https://nahwifix-apiruv.teleporthq.app/ar)
+- [Page - NahwiFix - Arabic Grammar & Punctuation Checker](https://nahwifix-apiruv.teleporthq.app/page): Check and correct Arabic grammar and punctuation mistakes instantly. Write better in Arabic with NahwiFix's intelligent tools.
+- [Homepage](https://nahwifix-apiruv.teleporthq.app)

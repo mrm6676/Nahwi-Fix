@@ -1,0 +1,8 @@
+{
+  "name": "NahwiFix",
+  "description": "Arabic Grammar & Punctuation Checker - Check and correct Arabic grammar, punctuation, and syntax mistakes instantly with smart suggestions and explanations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

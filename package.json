@@ -1,0 +1,12 @@
+{
+  "name": "nahwifix-android",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NahwiFix - Arabic Grammar & Punctuation Checker (Android / Kotlin Jetpack Compose)",
+  "scripts": {
+    "build": "node ./scripts/verify-build.js",
+    "start": "node ./server.js",
+    "dev": "node ./server.js"
+  },
+  "dependencies": {}
+}
