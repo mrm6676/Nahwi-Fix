@@ -254,6 +254,7 @@ const htmlContent = `<!DOCTYPE html>
         <strong>NahwiFix</strong>
       </div>
       <div class="header-actions">
+        <a href="/evaluation_dataset.pdf" target="_blank" download="NahwiFix_Evaluation_Dataset.pdf" class="icon-btn" title="تحميل ملف بيانات التقييم (PDF) / Download Evaluation Dataset" style="text-decoration:none; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:bold; color:inherit;">📄 PDF</a>
         <button class="icon-btn" onclick="toggleReaderMode()" id="readerBtn" title="وضع القارئ الميسر">📖</button>
         <button class="icon-btn" onclick="toggleLang()" id="langBtn">EN</button>
         <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
@@ -1213,6 +1214,19 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('OK');
     return;
+  }
+  if (req.url === '/evaluation_dataset.pdf' || req.url === '/dataset.pdf' || req.url === '/download/evaluation_dataset.pdf') {
+    const pdfPath = path.join(__dirname, 'evaluation_dataset.pdf');
+    if (fs.existsSync(pdfPath)) {
+      const stat = fs.statSync(pdfPath);
+      res.writeHead(200, {
+        'Content-Type': 'application/pdf',
+        'Content-Length': stat.size,
+        'Content-Disposition': 'inline; filename="NahwiFix_Evaluation_Dataset.pdf"'
+      });
+      fs.createReadStream(pdfPath).pipe(res);
+      return;
+    }
   }
   res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
   res.end(htmlContent);
