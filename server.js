@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = process.env.DEFAULT_APP_PORT || 3000;
+const PORT = process.env.PORT || process.env.DEFAULT_APP_PORT || 3000;
 
 const htmlContent = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
