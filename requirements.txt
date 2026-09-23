@@ -1,0 +1,2 @@
+# NahwiFix - Vercel Python Runtime Requirements
+# Built with Python 3 standard library (zero external dependencies required)
