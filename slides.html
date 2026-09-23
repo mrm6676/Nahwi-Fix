@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عرض تقديمي - مشروع NahwiFix | Arabic Grammar & Orthography Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #004D40;
+      --primary-dark: #00362D;
+      --primary-light: #10B981;
+      --accent: #2563EB;
+      --gold: #F59E0B;
+      --bg: #0F172A;
+      --card-bg: rgba(30, 41, 59, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --success: #34D399;
+      --danger: #F87171;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 77, 64, 0.35) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(37, 99, 235, 0.25) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 1) 100%);
+    }
+
+    .presentation-container {
+      width: 100%;
+      max-width: 960px;
+      height: 600px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Top presentation bar */
+    .pres-header {
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #004D40, #10B981);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 20px;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .slide-indicator {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary-light);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Slide area */
+    .slide-viewport {
+      flex: 1;
+      padding: 36px 40px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .slide {
+      display: none;
+      flex-direction: column;
+      animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      height: 100%;
+      justify-content: center;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .slide-badge {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary-light);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .slide h2 {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #FFFFFF 40%, #94A3B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+      max-width: 800px;
+    }
+
+    /* Grid cards inside slides */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .feature-grid.two-cols {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 18px;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .feature-icon {
+      font-size: 24px;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    .feature-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .feature-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .stat-box {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--primary-light);
+      line-height: 1.1;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    /* Code & Comparison box */
+    .compare-box {
+      display: flex;
+      gap: 14px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 10px;
+    }
+    .compare-side {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .compare-side.wrong {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    .compare-side.correct {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    /* Footer & Controls */
+    .pres-footer {
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    .btn-pres {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .btn-pres:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .btn-pres:active {
+      transform: scale(0.96);
+    }
+
+    .btn-pres.primary {
+      background: linear-gradient(135deg, #004D40, #10B981);
+      border: none;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .btn-pres.primary:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    }
+
+    .slide-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .dot.active {
+      width: 26px;
+      border-radius: 10px;
+      background: var(--primary-light);
+    }
+
+    /* Fullscreen & Export controls outside container */
+    .toolbar-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .presentation-container {
+        height: auto;
+        min-height: 600px;
+      }
+      .feature-grid, .feature-grid.two-cols {
+        grid-template-columns: 1fr;
+      }
+      .slide-viewport {
+        padding: 24px 20px;
+      }
+      .slide h2 {
+        font-size: 22px;
+      }
+      .compare-box {
+        flex-direction: column;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+      }
+      .presentation-container {
+        max-width: 100%;
+        height: auto;
+        border: none;
+        box-shadow: none;
+        background: #fff;
+      }
+      .slide {
+        display: block !important;
+        page-break-after: always;
+        padding: 40px;
+        color: #000;
+      }
+      .slide h2 {
+        color: #000;
+        -webkit-text-fill-color: initial;
+      }
+      .pres-footer, .pres-header, .toolbar-actions {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="presentation-container" id="presContainer">
+    <!-- Top Header -->
+    <header class="pres-header">
+      <div class="brand-group">
+        <div class="logo-badge">ن</div>
+        <div>
+          <div class="brand-title">NahwiFix Presentation</div>
+          <div class="brand-sub">مصحح النحو والترقيم العربي بالذكاء الاصطناعي</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <span class="slide-indicator" id="slideNumber">شريحة 1 من 7</span>
+        <button class="btn-pres" onclick="togglePresentationFullscreen()" title="ملء الشاشة">⛶</button>
+      </div>
+    </header>
+
+    <!-- Slide Content Viewport -->
+    <main class="slide-viewport">
+
+      <!-- SLIDE 1: Cover / Title -->
+      <section class="slide active" data-slide="1">
+        <span class="slide-badge">✨ المشروع الرسمي | Official Project Overview</span>
+        <h2>NahwiFix: المساعد الذكي لتدقيق النحو والترقيم العربي</h2>
+        <p class="slide-desc">
+          حل برمجي متكامل يجمع بين محرك التدقيق النحوي المحلي الفائق السرعة ونماذج الذكاء الاصطناعي (Gemini)، مع دعم شامل للأجهزة المحمولة عبر Android Jetpack Compose وتجربة ويب تفاعلية ميسرة بالصوت وإمكانية الوصول.
+        </p>
+        <div class="feature-grid" style="margin-top: 10px;">
+          <div class="stat-box">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">فحص محلي آمن ومشفر</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">5+</div>
+            <div class="stat-label">محاور تدقيق نحوي وترقيمي</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">Gemini</div>
+            <div class="stat-label">إعادة صياغة وتوليد ذكي</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Problem & Market Need -->
+      <section class="slide" data-slide="2">
+        <span class="slide-badge" style="color:#F87171; background:rgba(248,113,113,0.15); border-color:rgba(248,113,113,0.3);">⚠️ التحدي اللغوي والتقني</span>
+        <h2>لماذا صُمم NahwiFix؟ المشكلة والاحتياج</h2>
+        <p class="slide-desc">
+          تفتقر معظم أدوات التدقيق الحالية للخصوصية والسرعة في فهم خصوصية تراكيب لغة الضاد المعقدة، مثل إعراب الأسماء الخمسة، تمييز همزتي الوصل والقطع، وعلامات الترقيم العربية الأصيلة.
+        </p>
+        <div class="feature-grid two-cols">
+          <div class="feature-card">
+            <span class="feature-icon">🧩</span>
+            <h4>أخطاء الإملاء والهمزات الشائعة</h4>
+            <p>الخلط المستمر بين همزة الوصل والقطع (إلى vs الى، إن vs ان) والتاء المربوطة والمفتوحة في كتابات الطلاب والموظفين.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">⚖️</span>
+            <h4>مطابقة الفعل والمبتدأ وتنوين النصب</h4>
+            <p>ضعف برمجيات التدقيق الإنجليزية الشائعة في اكتشاف عدم مطابقة التذكير والتأنيث وزيادة ألف تنوين الفتح (عصفوراً جميلاً).</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🔒</span>
+            <h4>مخاطر الخصوصية في التدقيق السحابي</h4>
+            <p>إرسال مستندات سرية وعقود إلى خوادم خارجية يُهدد أمن البيانات الشخصية والحكومية ما لم يتوفر تدقيق محلي مستقل.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">♿</span>
+            <h4>تجاهل إمكانية الوصول وذوي الهمم</h4>
+            <p>غياب أدوات القراءة الصوتية المدمجة والإملاء الصوتي المباشر باللغة العربية المخصصة لضعاف البصر وكبار السن.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Architecture & Core Tech -->
+      <section class="slide" data-slide="3">
+        <span class="slide-badge">⚙️ البنية المعمارية والتقنية</span>
+        <h2>البنية الهندسية وتكامل المنصات</h2>
+        <p class="slide-desc">
+          صُمم المشروع ليعمل عبر بيئتين متكاملتين: تطبيق أندرويد رائد ونظام ويب تفاعلي سريع دون أي تضارب.
+        </p>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <span class="feature-icon">📱</span>
+            <h4>Android Jetpack Compose</h4>
+            <p>واجهات حديثة تدعم Material 3، مظهر داكن وديناميكي، وتصميم متكيف مع كافة أحجام الشاشات والأجهزة اللوحية.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">💾</span>
+            <h4>Room Database مشفرة</h4>
+            <p>حفظ سجلات التدقيق والمستندات محلياً على الجهاز لضمان الخصوصية والعمل دون اتصال بالإنترنت (Offline-First).</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🤖</span>
+            <h4>Gemini AI Integration</h4>
+            <p>تحليل عميق للسياق، صياغة الخطابات الرسمية، واقتراح التشكيل والحركات المعربة بدقة متناهية.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Core Engine Features -->
+      <section class="slide" data-slide="4">
+        <span class="slide-badge">⚡ إمكانيات المحرك</span>
+        <h2>محرك القواعد والترقيم التلقائي (ArabicGrammarEngine)</h2>
+        <p class="slide-desc">
+          خوارزميات فحص متقدمة تغطي القواعد النحوية والإملائية مع تقديم تفنيد وشرح تعليمي وافٍ لكل خطأ.
+        </p>
+        
+        <div class="compare-box">
+          <div class="compare-side wrong">
+            <div style="font-weight:bold; color:var(--danger); font-size:13px; margin-bottom:4px;">❌ النص قبل التدقيق:</div>
+            <div style="font-size:14px; line-height:1.6;">ذهب محمد الى المدرسة، و هو يحمل كتبه وشاهد عصفورا جميلا .</div>
+          </div>
+          <div class="compare-side correct">
+            <div style="font-weight:bold; color:var(--success); font-size:13px; margin-bottom:4px;">✓ بعد التدقيق بضغطة زر:</div>
+            <div style="font-size:14px; line-height:1.6;">ذهب محمدٌ إلى المدرسةِ، وهو يحملُ كتبَه وشاهدَ عصفوراً جميلاً.</div>
+          </div>
+        </div>
+
+        <div class="feature-grid" style="margin-top:14px;">
+          <div class="feature-card">
+            <h4>همزة القطع والوصل</h4>
+            <p>أكثر من 80 كلمة مفتاحية شائعة الخطأ تصحح فورياً مع التوضيح النحوي.</p>
+          </div>
+          <div class="feature-card">
+            <h4>قواعد الترقيم والواو</h4>
+            <p>التصاق الفاصلة (،) بالكلمة السابقة، وإلغاء المسافة الشاذة بعد واو العطف.</p>
+          </div>
+          <div class="feature-card">
+            <h4>مطابقة التذكير والتأنيث</h4>
+            <p>مراعاة مطابقة الأفعال للمبتدأ (المعلمة تساعد vs يساعد).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Accessibility & AI Features -->
+      <section class="slide" data-slide="5">
+        <span class="slide-badge">✨ القارئ الذكي والصوتيات</span>
+        <h2>إمكانية الوصول (Accessibility) والصوتيات</h2>
+        <p class="slide-desc">
+          تجربة شاملة تراعي كافة فئات المستخدمين بتوفير أدوات قراءة ونطق وإملاء صوتي باللغة العربية.
+        </p>
+        <div class="feature-grid two-cols">
+          <div class="feature-card">
+            <span class="feature-icon">🔊</span>
+            <h4>محرك القراءة الصوتية (TTS)</h4>
+            <p>قراءة النصوص العربية الفصيحة بصوت واضح ومحدد السرعة، مع تمييز الكلمات المقروءة لمساعدة المتعلمين وضعاف البصر.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🎤</span>
+            <h4>الإملاء الصوتي التفاعلي (Voice Dictation)</h4>
+            <p>إمكانية كتابة المقالات وتدقيقها صوتياً بالمايكروفون المباشر دون الحاجة للوحة المفاتيح.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🔍</span>
+            <h4>تكبير الخط ونمط التباين العالي</h4>
+            <p>التحكم المرن بحجم الخط (A- / A+) ونمط الألوان عالي التباين لتسهيل القراءة المريحة.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">📄</span>
+            <h4>تصدير بيانات التقييم (Evaluation PDF)</h4>
+            <p>تحميل ومشاركة تقارير الفحص ومجموعات البيانات التدريبية بصيغة PDF مهيأة للطباعة.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Business Model & Pricing -->
+      <section class="slide" data-slide="6">
+        <span class="slide-badge">💳 نموذج العمل والاشتراكات</span>
+        <h2>الخطط والأسعار وقابلية التوسع</h2>
+        <p class="slide-desc">
+          نموذج اشتراكات مدروس يخدم الأفراد، المحترفين، والمؤسسات التعليمية والإعلامية.
+        </p>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <span class="feature-icon">🌱</span>
+            <h4>الأساسية (Free)</h4>
+            <div style="font-size:18px; font-weight:bold; color:var(--primary-light); margin:4px 0;">مجاناً دائماً</div>
+            <p>1,000 كلمة لكل فحص، تصحيح الأخطاء الأساسية، وحفظ محلي بالسجل.</p>
+          </div>
+          <div class="feature-card" style="border-color:var(--primary-light); background:rgba(16,185,129,0.08);">
+            <span class="feature-icon">⭐</span>
+            <h4>الاحترافية (Pro)</h4>
+            <div style="font-size:18px; font-weight:bold; color:var(--primary-light); margin:4px 0;">$9 / شهرياً</div>
+            <p>فحص غير محدود، تشكيل كامل بالحركات، تعرف بصري OCR، وتوليد نطق صوتي.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🏢</span>
+            <h4>المؤسسات (Enterprise)</h4>
+            <div style="font-size:18px; font-weight:bold; color:var(--accent); margin:4px 0;">$29 / شهرياً</div>
+            <p>تراخيص مجمعة للجامعات ودور النشر، وربط بواجهة البرمجة (API Integration).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Conclusion & Roadmap -->
+      <section class="slide" data-slide="7">
+        <span class="slide-badge">🚀 الخاتمة والرؤية المستقبلية</span>
+        <h2>الآفاق المستقبلية للمشروع</h2>
+        <p class="slide-desc">
+          خطط التطوير المستمرة لتحويل NahwiFix إلى المنصة العربية الأولى في السلامة اللغوية.
+        </p>
+        <div class="feature-grid two-cols">
+          <div class="feature-card">
+            <span class="feature-icon">🌐</span>
+            <h4>إضافات للمتصفحات وحزم المكتبات</h4>
+            <p>تطوير إضافة لـ Chrome و Edge و Word تتيح التصحيح الفوري أثناء كتابة الرسائل والمستندات.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🎓</span>
+            <h4>وضع التعلم التفاعلي للطلاب</h4>
+            <p>ألعاب واختبارات لغوية قصيرة مدمجة في التطبيق لشرح أسباب علامات الإعراب وتطبيقاتها.</p>
+          </div>
+        </div>
+        <div style="margin-top:20px; display:flex; gap:12px; justify-content:center;">
+          <a href="/" class="btn-pres primary" style="text-decoration:none;">
+            🚀 تجربة التطبيق المباشر (Live Demo)
+          </a>
+          <a href="/evaluation_dataset.pdf" target="_blank" download class="btn-pres" style="text-decoration:none;">
+            📄 تحميل ملف التقييم (PDF)
+          </a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Controls Footer -->
+    <footer class="pres-footer">
+      <div style="display:flex; gap:10px;">
+        <button class="btn-pres" id="btnPrevSlide" onclick="prevSlide()">
+          <span>➡</span> الشريحة السابقة
+        </button>
+        <button class="btn-pres primary" id="btnNextSlide" onclick="nextSlide()">
+          الشريحة التالية <span>⬅</span>
+        </button>
+      </div>
+
+      <!-- Dots navigation -->
+      <div class="slide-dots" id="slideDots">
+        <div class="dot active" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
+        <div class="dot" onclick="goToSlide(4)"></div>
+        <div class="dot" onclick="goToSlide(5)"></div>
+        <div class="dot" onclick="goToSlide(6)"></div>
+        <div class="dot" onclick="goToSlide(7)"></div>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <button class="btn-pres" onclick="window.print()" title="طباعة أو حفظ كملف PDF">
+          🖨️ طباعة العرض
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- External quick actions -->
+  <div class="toolbar-actions">
+    <a href="/" class="btn-pres">
+      <span>📱</span> العودة للتطبيق والمصحح
+    </a>
+    <a href="/slides?lang=en" class="btn-pres">
+      <span>🇬🇧</span> English Version (عرض الشرائح بالإنجليزية)
+    </a>
+    <span style="font-size:12px; color:var(--text-muted);">يمكنك التنقل بين الشرائح بواسطة مفاتيح الأسهم (← / →) أو مسافة</span>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 7;
+
+    function updateSlideUI() {
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      const activeSlide = document.querySelector(\`.slide[data-slide="\${currentSlide}"]\`);
+      if (activeSlide) activeSlide.classList.add('active');
+
+      // Update dots
+      document.querySelectorAll('.dot').forEach((d, idx) => {
+        d.classList.toggle('active', idx + 1 === currentSlide);
+      });
+
+      // Update indicator
+      const ind = document.getElementById('slideNumber');
+      if (ind) ind.innerText = \`شريحة \${currentSlide} من \${totalSlides}\`;
+
+      // Update Prev / Next buttons
+      const btnPrev = document.getElementById('btnPrevSlide');
+      const btnNext = document.getElementById('btnNextSlide');
+      if (btnPrev) btnPrev.style.opacity = currentSlide === 1 ? '0.5' : '1';
+      if (btnNext) {
+        if (currentSlide === totalSlides) {
+          btnNext.innerHTML = 'العودة للبداية <span>🔄</span>';
+        } else {
+          btnNext.innerHTML = 'الشريحة التالية <span>⬅</span>';
+        }
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+      } else {
+        currentSlide = 1;
+      }
+      updateSlideUI();
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlideUI();
+      }
+    }
+
+    function goToSlide(num) {
+      if (num >= 1 && num <= totalSlides) {
+        currentSlide = num;
+        updateSlideUI();
+      }
+    }
+
+    function togglePresentationFullscreen() {
+      const elem = document.getElementById('presContainer');
+      if (!document.fullscreenElement) {
+        if (elem.requestFullscreen) elem.requestFullscreen();
+        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowRight' || e.key === 'PageUp') {
+        prevSlide();
+      }
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    document.addEventListener('touchend', e => {
+      const diff = e.changedTouches[0].screenX - touchStartX;
+      if (diff > 50) prevSlide();
+      else if (diff < -50) nextSlide();
+    }, false);
+
+    updateSlideUI();
+  </script>
+</body>
+</html>

@@ -13,11 +13,11 @@ interface HistoryDao {
     fun getAllHistory(): Flow<List<HistoryEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(history: HistoryEntity): Long
+    fun insert(history: HistoryEntity)
 
     @Delete
-    fun delete(history: HistoryEntity): Int
+    fun delete(history: HistoryEntity)
 
     @Query("DELETE FROM check_history")
-    fun clearAll(): Int
+    fun clearAll()
 }

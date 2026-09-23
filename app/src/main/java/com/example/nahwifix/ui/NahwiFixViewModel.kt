@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.nahwifix.data.AppDatabase
 import com.example.nahwifix.data.HistoryEntity
 import com.example.nahwifix.data.HistoryRepository
+import com.example.nahwifix.data.repository.AllamArabicWritingRepository
 import com.example.nahwifix.data.repository.GeminiArabicGrammarRepository
 import com.example.nahwifix.engine.ArabicGrammarEngine
 import com.example.nahwifix.model.AppLanguage
@@ -27,6 +28,7 @@ class NahwiFixViewModel(application: Application) : AndroidViewModel(application
 
     private val historyRepository: HistoryRepository
     val geminiRepository: GeminiArabicGrammarRepository = GeminiArabicGrammarRepository()
+    val allamRepository: AllamArabicWritingRepository = AllamArabicWritingRepository()
 
     init {
         val db = AppDatabase.getDatabase(application)
@@ -412,7 +414,7 @@ class NahwiFixViewModel(application: Application) : AndroidViewModel(application
 
         _isGeneratingWithAi.value = true
         viewModelScope.launch {
-            val result = geminiRepository.writeWithAi(
+            val result = allamRepository.writeWithAllam(
                 prompt = currentPrompt,
                 currentText = currentContent,
                 tone = tone
@@ -459,5 +461,33 @@ class NahwiFixViewModel(application: Application) : AndroidViewModel(application
 
     fun clearStatusMessage() {
         _statusMessage.value = null
+    }
+
+    fun deleteHistoryItem(item: HistoryEntity) {
+        viewModelScope.launch {
+            historyRepository.deleteCheck(item)
+            _statusMessage.value = if (_language.value == AppLanguage.ARABIC)
+                "تم حذف السجل المحدد"
+            else
+                "Deleted history record"
+        }
+    }
+
+    fun clearAllHistory() {
+        viewModelScope.launch {
+            historyRepository.clearHistory()
+            _statusMessage.value = if (_language.value == AppLanguage.ARABIC)
+                "تم مسح كافة سجلات التحليل"
+            else
+                "Cleared all analysis history"
+        }
+    }
+
+    fun restoreHistoryToInput(item: HistoryEntity) {
+        updateInputText(item.originalText)
+        _statusMessage.value = if (_language.value == AppLanguage.ARABIC)
+            "تمت استعادة النص من السجل"
+        else
+            "Restored text from history"
     }
 }

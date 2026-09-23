@@ -419,6 +419,113 @@ const htmlContent = `<!DOCTYPE html>
     #toastNotification.success { background: #059669; }
     #toastNotification.error { background: #DC2626; }
     #toastNotification.info { background: #2563EB; }
+
+    /* Animated Processing Indicator Styling */
+    .processing-loading-card {
+      display: none;
+      background: var(--surface);
+      border: 1.5px solid rgba(0, 77, 64, 0.35);
+      border-radius: 16px;
+      padding: 16px 20px;
+      box-shadow: 0 4px 20px rgba(0, 77, 64, 0.08);
+      margin: 12px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .processing-loading-card.active {
+      display: block;
+    }
+    .spinner-ring-container {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 12px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .spinner-ring-outer {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 3.5px solid transparent;
+      border-top-color: var(--primary);
+      border-right-color: var(--secondary);
+      animation: spinRing 1.1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+    }
+    .spinner-ring-inner {
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      border: 2px dashed rgba(0, 77, 64, 0.25);
+      animation: spinRingReverse 2.2s linear infinite;
+    }
+    .spinner-ring-center {
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: #FFFFFF;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 17px;
+      box-shadow: 0 2px 8px rgba(0, 77, 64, 0.3);
+      animation: pulseBadge 1.4s ease-in-out infinite alternate;
+    }
+    @keyframes spinRing {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes spinRingReverse {
+      0% { transform: rotate(360deg); }
+      100% { transform: rotate(0deg); }
+    }
+    @keyframes pulseBadge {
+      0% { transform: scale(0.92); }
+      100% { transform: scale(1.08); }
+    }
+    .processing-shimmer-bar {
+      width: 80%;
+      height: 5px;
+      background: rgba(0, 0, 0, 0.06);
+      border-radius: 3px;
+      margin: 10px auto 0 auto;
+      overflow: hidden;
+      position: relative;
+    }
+    .processing-shimmer-thumb {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 40%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+      animation: shimmerSlide 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    @keyframes shimmerSlide {
+      0% { transform: translateX(-120%); }
+      100% { transform: translateX(320%); }
+    }
+    .pulsing-dots-inline span {
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--primary);
+      margin: 0 1.5px;
+      animation: dotBounce 1.2s infinite ease-in-out;
+    }
+    .pulsing-dots-inline span:nth-child(2) { animation-delay: 0.2s; }
+    .pulsing-dots-inline span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotBounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1.3); opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -439,6 +546,9 @@ const htmlContent = `<!DOCTYPE html>
         <strong>NahwiFix</strong>
       </div>
       <div class="header-actions">
+        <a href="/slides" class="icon-btn" title="عرض تقديمي عن المشروع / Presentation Slides" style="background:linear-gradient(135deg, rgba(0,77,64,0.15), rgba(16,185,129,0.2)); border-color:var(--primary); font-weight:bold;">
+          <span>📽️</span> <span class="nav-label" data-ar="العرض" data-en="Slides">العرض</span>
+        </a>
         <a href="/evaluation_dataset.pdf" target="_blank" download="NahwiFix_Evaluation_Dataset.pdf" class="icon-btn" title="تحميل ملف بيانات التقييم (PDF) / Download Evaluation Dataset">
           <span>📄</span> PDF
         </a>
@@ -514,7 +624,7 @@ const htmlContent = `<!DOCTYPE html>
               <span style="background:var(--primary-container); color:var(--primary); padding:6px; border-radius:50%; font-size:16px;">✨</span>
               <div>
                 <strong style="color:var(--primary);">الكتابة بالذكاء الاصطناعي (Write with AI)</strong>
-                <div style="font-size:12px; color:var(--text-muted);">صياغة نصوص فصيحة، رسائل، ومقالات بالذكاء الاصطناعي</div>
+                <div style="font-size:12px; color:var(--text-muted);">صياغة نصوص فصيحة، رسائل، ومقالات باحترافية</div>
               </div>
             </div>
             <button class="icon-btn" id="writeAiToggleBtn" onclick="event.stopPropagation(); toggleWriteAiCard();">▼</button>
@@ -613,6 +723,26 @@ const htmlContent = `<!DOCTYPE html>
             <button class="btn-outline" onclick="applyAll()" id="btnApplyAll" title="تطبيق كافة الاقتراحات فورياً">
               <span>⚡</span> <span id="btnApplyAllLabel">تطبيق الكل</span>
             </button>
+          </div>
+        </div>
+
+        <!-- SMOOTH ANIMATED PROCESSING INDICATOR -->
+        <div id="processingIndicatorCard" class="processing-loading-card" role="status" aria-live="polite">
+          <div class="spinner-ring-container">
+            <div class="spinner-ring-outer"></div>
+            <div class="spinner-ring-inner"></div>
+            <div class="spinner-ring-center">ن</div>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:6px; font-weight:bold; color:var(--primary); font-size:14px;">
+            <span>✨</span>
+            <span id="processingIndicatorTitle">جارٍ تدقيق وتحليل النص العربي بالذكاء الاصطناعي</span>
+            <div class="pulsing-dots-inline"><span></span><span></span><span></span></div>
+          </div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:4px;" id="processingIndicatorSubtitle">
+            فحص الإعراب، مطابقة الفعل والفاعل، ضبط علامات الترقيم ورسم الهمزات...
+          </div>
+          <div class="processing-shimmer-bar">
+            <div class="processing-shimmer-thumb"></div>
           </div>
         </div>
 
@@ -1198,12 +1328,57 @@ const htmlContent = `<!DOCTYPE html>
       return issues;
     }
 
+    let isProcessingText = false;
+
+    function showProcessingIndicator(titleAr, titleEn) {
+      const card = document.getElementById('processingIndicatorCard');
+      if (!card) return;
+      const titleEl = document.getElementById('processingIndicatorTitle');
+      if (titleEl) {
+        titleEl.innerText = currentLang === 'ar' ? (titleAr || 'جارٍ تدقيق وتحليل النص العربي بالذكاء الاصطناعي') : (titleEn || 'Analyzing Arabic text with AI');
+      }
+      card.classList.add('active');
+    }
+
+    function hideProcessingIndicator() {
+      const card = document.getElementById('processingIndicatorCard');
+      if (card) {
+        card.classList.remove('active');
+      }
+    }
+
     function runCheck(showUserToast = false) {
+      if (isProcessingText) return;
       const text = document.getElementById('textInput').value;
       const words = text.trim() ? text.trim().split(/\\s+/).length : 0;
       document.getElementById('statWords').innerText = words + (currentLang === 'ar' ? ' كلمات' : ' words');
       document.getElementById('statChars').innerText = text.length + (currentLang === 'ar' ? ' أحرف' : ' chars');
 
+      // If user clicked check or text is non-empty, play smooth animated indicator
+      if (showUserToast && text.trim().length > 0) {
+        isProcessingText = true;
+        showProcessingIndicator('جارٍ تدقيق النص واكتشاف الأخطاء النحوية والإملائية', 'Auditing grammar and orthography');
+        const btnCheck = document.getElementById('btnCheck');
+        if (btnCheck) {
+          btnCheck.disabled = true;
+          btnCheck.style.opacity = '0.7';
+        }
+
+        setTimeout(() => {
+          hideProcessingIndicator();
+          isProcessingText = false;
+          if (btnCheck) {
+            btnCheck.disabled = false;
+            btnCheck.style.opacity = '1';
+          }
+          executeCheckAnalysis(text, showUserToast);
+        }, 500);
+      } else {
+        executeCheckAnalysis(text, showUserToast);
+      }
+    }
+
+    function executeCheckAnalysis(text, showUserToast) {
       currentIssues = analyze(text);
       document.getElementById('statIssues').innerText = currentIssues.length + (currentLang === 'ar' ? ' ملاحظات' : ' issues');
       
@@ -1293,30 +1468,67 @@ const htmlContent = `<!DOCTYPE html>
         return;
       }
 
-      for (const item of issues) {
-        if (item.orig && item.sugg && !item.orig.includes('مسافة')) {
-          text = text.split(item.orig).join(item.sugg);
-        }
-      }
-      // Punctuation cleanups
-      text = text.replace(/,/g, '،').replace(/\\?/g, '؟').replace(/;/g, '؛');
-      text = text.replace(/\\s+([،,.!?؟؛])/g, '$1');
-      text = text.replace(/(^|\\s)و\\s+([\\u0600-\\u06FF]+)/g, '$1و$2');
+      showProcessingIndicator('جارٍ معالجة وتطبيق كافة التصحيحات النحوية والإملائية', 'Processing and applying all corrections');
+      const btnApply = document.getElementById('btnApplyAll');
+      if (btnApply) btnApply.disabled = true;
 
-      document.getElementById('textInput').value = text;
-      runCheck(false);
-      updateReaderDisplay();
-      showToast(currentLang === 'ar' ? '✓ تم تطبيق جميع التصحيحات بنجاح!' : '✓ All corrections applied!', 'success');
+      setTimeout(() => {
+        for (const item of issues) {
+          if (item.orig && item.sugg && !item.orig.includes('مسافة')) {
+            text = text.split(item.orig).join(item.sugg);
+          }
+        }
+        // Punctuation cleanups
+        text = text.replace(/,/g, '،').replace(/\\?/g, '؟').replace(/;/g, '؛');
+        text = text.replace(/\\s+([،,.!?؟؛])/g, '$1');
+        text = text.replace(/(^|\\s)و\\s+([\\u0600-\\u06FF]+)/g, '$1و$2');
+
+        document.getElementById('textInput').value = text;
+        hideProcessingIndicator();
+        if (btnApply) btnApply.disabled = false;
+        runCheck(false);
+        updateReaderDisplay();
+        showToast(currentLang === 'ar' ? '✓ تم تطبيق جميع التصحيحات بنجاح!' : '✓ All corrections applied!', 'success');
+      }, 450);
     }
 
     function fixAllErrors() {
-      applyAll();
-      const alertEl = document.getElementById('statusBanner');
-      if (alertEl) {
-        alertEl.style.display = 'block';
-        alertEl.innerText = currentLang === 'ar' ? '✓ تم تصحيح كافة الأخطاء النحوية والترقيمية فورياً!' : '✓ All grammar and punctuation errors fixed!';
-        setTimeout(() => { alertEl.style.display = 'none'; }, 4500);
+      let text = document.getElementById('textInput').value;
+      const issues = analyze(text);
+      if (issues.length === 0) {
+        showToast(currentLang === 'ar' ? 'النص خالٍ من الأخطاء بالفعل' : 'No errors found in text', 'info');
+        return;
       }
+
+      showProcessingIndicator('جارٍ المعالجة الفورية وتصحيح الأخطاء بالذكاء الاصطناعي', 'Processing text and fixing all errors with AI');
+      const btnFix = document.getElementById('btnFixAll');
+      if (btnFix) btnFix.disabled = true;
+
+      setTimeout(() => {
+        for (const item of issues) {
+          if (item.orig && item.sugg && !item.orig.includes('مسافة')) {
+            text = text.split(item.orig).join(item.sugg);
+          }
+        }
+        // Punctuation cleanups
+        text = text.replace(/,/g, '،').replace(/\\?/g, '؟').replace(/;/g, '؛');
+        text = text.replace(/\\s+([،,.!?؟؛])/g, '$1');
+        text = text.replace(/(^|\\s)و\\s+([\\u0600-\\u06FF]+)/g, '$1و$2');
+
+        document.getElementById('textInput').value = text;
+        hideProcessingIndicator();
+        if (btnFix) btnFix.disabled = false;
+        runCheck(false);
+        updateReaderDisplay();
+
+        const alertEl = document.getElementById('statusBanner');
+        if (alertEl) {
+          alertEl.style.display = 'block';
+          alertEl.innerText = currentLang === 'ar' ? '✓ تم تصحيح كافة الأخطاء النحوية والترقيمية فورياً!' : '✓ All grammar and punctuation errors fixed!';
+          setTimeout(() => { alertEl.style.display = 'none'; }, 4500);
+        }
+        showToast(currentLang === 'ar' ? '✓ تم تصحيح النص بالكامل بنجاح!' : '✓ All text corrections applied!', 'success');
+      }, 550);
     }
 
     function loadSample(i, btnEl) {
@@ -1409,7 +1621,7 @@ const htmlContent = `<!DOCTYPE html>
       const genBtn = document.getElementById('btnGenerateAi');
 
       genBtn.disabled = true;
-      genBtn.innerHTML = '<span>⏳</span> ' + (currentLang === 'ar' ? 'جارٍ التوليد بالذكاء الاصطناعي...' : 'Generating with AI...');
+      genBtn.innerHTML = '<span>⏳</span> ' + (currentLang === 'ar' ? 'جارٍ الصياغة والتوليد...' : 'Generating with AI...');
 
       setTimeout(() => {
         let generated = '';
@@ -1866,6 +2078,39 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('OK');
     return;
+  }
+  const reqUrl = req.url || '/';
+  if (reqUrl.startsWith('/slides_en') || reqUrl.startsWith('/slides-en') || reqUrl === '/presentation/en' || reqUrl === '/slides?lang=en') {
+    const slidesPath = path.join(__dirname, 'slides_en.html');
+    if (fs.existsSync(slidesPath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      fs.createReadStream(slidesPath).pipe(res);
+      return;
+    }
+  }
+  if (reqUrl === '/slides' || reqUrl.startsWith('/slides?') || reqUrl === '/presentation' || reqUrl === '/slides.html') {
+    // If language is explicitly Arabic or default, check if user requested Arabic or English
+    const isEnglish = reqUrl.includes('lang=en');
+    const targetFile = isEnglish ? 'slides_en.html' : 'slides.html';
+    const slidesPath = path.join(__dirname, targetFile);
+    if (fs.existsSync(slidesPath)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      fs.createReadStream(slidesPath).pipe(res);
+      return;
+    }
+  }
+  if (req.url === '/promo_banner.jpg' || req.url === '/promo.jpg' || req.url === '/ad.jpg') {
+    const imgPath = path.join(__dirname, 'promo_banner.jpg');
+    if (fs.existsSync(imgPath)) {
+      const stat = fs.statSync(imgPath);
+      res.writeHead(200, {
+        'Content-Type': 'image/jpeg',
+        'Content-Length': stat.size,
+        'Cache-Control': 'public, max-age=86400'
+      });
+      fs.createReadStream(imgPath).pipe(res);
+      return;
+    }
   }
   if (req.url === '/evaluation_dataset.pdf' || req.url === '/dataset.pdf' || req.url === '/download/evaluation_dataset.pdf') {
     const pdfPath = path.join(__dirname, 'evaluation_dataset.pdf');

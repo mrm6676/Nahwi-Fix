@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NahwiFix Presentation - Intelligent Arabic Grammar & Orthography Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #004D40;
+      --primary-dark: #00362D;
+      --primary-light: #10B981;
+      --accent: #2563EB;
+      --gold: #F59E0B;
+      --bg: #0F172A;
+      --card-bg: rgba(30, 41, 59, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --success: #34D399;
+      --danger: #F87171;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .ar-font { font-family: 'Cairo', sans-serif; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 77, 64, 0.35) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(37, 99, 235, 0.25) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 1) 100%);
+    }
+
+    .presentation-container {
+      width: 100%;
+      max-width: 960px;
+      height: 620px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pres-header {
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #004D40, #10B981);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .slide-indicator {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary-light);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .slide-viewport {
+      flex: 1;
+      padding: 32px 40px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .slide {
+      display: none;
+      flex-direction: column;
+      animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      height: 100%;
+      justify-content: center;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .slide-badge {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary-light);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .slide h2 {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #FFFFFF 40%, #94A3B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 22px;
+      max-width: 820px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .feature-grid.two-cols {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .feature-icon {
+      font-size: 24px;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    .feature-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .feature-card p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .stat-box {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--primary-light);
+      line-height: 1.1;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .compare-box {
+      display: flex;
+      gap: 14px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 8px;
+    }
+    .compare-side {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 8px;
+    }
+    .compare-side.wrong {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    .compare-side.correct {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .pres-footer {
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    .btn-pres {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+      user-select: none;
+      text-decoration: none;
+    }
+    .btn-pres:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .btn-pres:active {
+      transform: scale(0.96);
+    }
+
+    .btn-pres.primary {
+      background: linear-gradient(135deg, #004D40, #10B981);
+      border: none;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .btn-pres.primary:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    }
+
+    .slide-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .dot.active {
+      width: 26px;
+      border-radius: 10px;
+      background: var(--primary-light);
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      .presentation-container {
+        height: auto;
+        min-height: 620px;
+      }
+      .feature-grid, .feature-grid.two-cols {
+        grid-template-columns: 1fr;
+      }
+      .slide-viewport {
+        padding: 24px 20px;
+      }
+      .slide h2 {
+        font-size: 22px;
+      }
+      .compare-box {
+        flex-direction: column;
+      }
+    }
+
+    @media print {
+      body { background: #fff; color: #000; }
+      .presentation-container { max-width: 100%; height: auto; border: none; box-shadow: none; background: #fff; }
+      .slide { display: block !important; page-break-after: always; padding: 40px; color: #000; }
+      .slide h2 { color: #000; -webkit-text-fill-color: initial; }
+      .pres-footer, .pres-header, .toolbar-actions { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="presentation-container" id="presContainer">
+    <!-- Top Header -->
+    <header class="pres-header">
+      <div class="brand-group">
+        <div class="logo-badge">ن</div>
+        <div>
+          <div class="brand-title">NahwiFix • Project Presentation</div>
+          <div class="brand-sub">Intelligent Arabic Grammar, Orthography & AI Assistant</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <span class="slide-indicator" id="slideNumber">Slide 1 of 7</span>
+        <button class="btn-pres" onclick="togglePresentationFullscreen()" title="Toggle Fullscreen">⛶ Fullscreen</button>
+      </div>
+    </header>
+
+    <!-- Slide Content Viewport -->
+    <main class="slide-viewport">
+
+      <!-- SLIDE 1: Executive Overview -->
+      <section class="slide active" data-slide="1">
+        <span class="slide-badge">✨ Executive Project Overview</span>
+        <h2>NahwiFix: Next-Gen Arabic Grammar & Orthography Engine</h2>
+        <p class="slide-desc">
+          NahwiFix is a cross-platform linguistic assistant engineered to elevate Arabic writing. It blends an ultra-fast, privacy-first local grammar engine with Gemini AI synthesis, delivered through a production-ready Android app (Jetpack Compose) and an interactive web workspace with accessibility features.
+        </p>
+        <div class="feature-grid" style="margin-top: 10px;">
+          <div class="stat-box">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Offline & Private Processing</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">&lt; 15ms</div>
+            <div class="stat-label">Grammar Analysis Latency</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">Gemini</div>
+            <div class="stat-label">Assisted Writing & Reformulation</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Problem & Market Challenge -->
+      <section class="slide" data-slide="2">
+        <span class="slide-badge" style="color:#F87171; background:rgba(248,113,113,0.15); border-color:rgba(248,113,113,0.3);">⚠️ The Linguistic & Technical Challenge</span>
+        <h2>Why Arabic Spellcheckers Fall Short</h2>
+        <p class="slide-desc">
+          Arabic syntax is governed by complex morphological inflection, root systems, and orthographic subtleties that standard English-first proofing tools continually misdiagnose or ignore.
+        </p>
+        <div class="feature-grid two-cols">
+          <div class="feature-card">
+            <span class="feature-icon">🧩</span>
+            <h4>Hamza & Orthographic Ambiguity</h4>
+            <p>Persistent confusion between Hamzat Al-Wasl and Hamzat Al-Qat' (إلى vs الى, إن vs ان) and improper Ta' Marbuta usage across professional communication.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">⚖️</span>
+            <h4>Subject-Verb Gender Agreement</h4>
+            <p>Failure to catch grammatical agreement discrepancies (e.g., المعلمة يساعد vs المعلمة تساعد) and Tanween Al-Fath accusative Alif markers.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🔒</span>
+            <h4>Cloud Data Leakage Risks</h4>
+            <p>Sending confidential legal briefs and corporate correspondence to third-party cloud APIs poses enterprise privacy vulnerabilities.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">♿</span>
+            <h4>Accessibility & Assistive Technology Gaps</h4>
+            <p>Lack of native Arabic Text-to-Speech (TTS), voice dictation, and high-contrast reading aids for visually impaired and elderly users.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: System Architecture -->
+      <section class="slide" data-slide="3">
+        <span class="slide-badge">⚙️ Technology Stack & Architecture</span>
+        <h2>Dual-Platform Engineering Architecture</h2>
+        <p class="slide-desc">
+          NahwiFix operates seamlessly across modern native mobile and real-time web environments with zero dependency mismatches.
+        </p>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <span class="feature-icon">📱</span>
+            <h4>Android Jetpack Compose</h4>
+            <p>Material 3 dynamic theming, edge-to-edge layout, responsive tablet adaptations, and declarative UI with MVVM state architecture.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">💾</span>
+            <h4>Room Local Database</h4>
+            <p>Encrypted local SQLite storage via Android Room with KSP integration for complete offline history and document caching.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🤖</span>
+            <h4>Gemini AI Integration</h4>
+            <p>Deep semantic contextualization, formal letter drafting, intelligent summarization, and diacritization (Tashkeel) assistance.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Core Engine Capabilities -->
+      <section class="slide" data-slide="4">
+        <span class="slide-badge">⚡ Algorithmic Performance</span>
+        <h2>ArabicGrammarEngine: Precision Analysis</h2>
+        <p class="slide-desc">
+          Rule-based tokenizers and deterministic regex trees provide instantaneous grammar corrections with accompanying pedagogical explanations.
+        </p>
+        
+        <div class="compare-box">
+          <div class="compare-side wrong">
+            <div style="font-weight:bold; color:var(--danger); font-size:13px; margin-bottom:4px;">❌ Uncorrected Raw Text:</div>
+            <div class="ar-font" dir="rtl" style="font-size:15px; line-height:1.6;">ذهب محمد الى المدرسة، و هو يحمل كتبه وشاهد عصفورا جميلا .</div>
+          </div>
+          <div class="compare-side correct">
+            <div style="font-weight:bold; color:var(--success); font-size:13px; margin-bottom:4px;">✓ Single-Click NahwiFix Result:</div>
+            <div class="ar-font" dir="rtl" style="font-size:15px; line-height:1.6;">ذهب محمدٌ إلى المدرسةِ، وهو يحملُ كتبَه وشاهدَ عصفوراً جميلاً.</div>
+          </div>
+        </div>
+
+        <div class="feature-grid" style="margin-top:14px;">
+          <div class="feature-card">
+            <h4>Hamza Qat' / Wasl Tree</h4>
+            <p>80+ common preposition and noun root patterns verified instantly with grammatical justifications.</p>
+          </div>
+          <div class="feature-card">
+            <h4>Punctuation & Conjunctions</h4>
+            <p>Enforces zero-space adhesion for Arabic commas (،) and Waw Al-Atf (و) joining subsequent tokens.</p>
+          </div>
+          <div class="feature-card">
+            <h4>Accusative Tanween Rules</h4>
+            <p>Automatic verification of Alif Tanween Al-Fath and prevention on Ta' Marbuta.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Assistive Tools & Accessibility -->
+      <section class="slide" data-slide="5">
+        <span class="slide-badge">✨ Inclusive Design & Voice</span>
+        <h2>Accessibility & Assistive Voice Suite</h2>
+        <p class="slide-desc">
+          Designed with universal design principles to ensure Arabic content is accessible to all creators regardless of physical or visual limitations.
+        </p>
+        <div class="feature-grid two-cols">
+          <div class="feature-card">
+            <span class="feature-icon">🔊</span>
+            <h4>Arabic Text-to-Speech (TTS)</h4>
+            <p>Natural Arabic voice synthesis reads corrected prose out loud with real-time word highlighting, assisting learners and low-vision individuals.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🎤</span>
+            <h4>Interactive Voice Dictation</h4>
+            <p>Hands-free speech-to-text allowing users to dictate paragraphs directly into the grammar checker via Web Speech and Android SpeechRecognizer.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🔍</span>
+            <h4>High Contrast & Dynamic Sizing</h4>
+            <p>Dedicated reader mode with variable typography scaling (A- / A+) and high-contrast color schemes for optical comfort.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">📄</span>
+            <h4>Evaluation Dataset Export (PDF)</h4>
+            <p>One-click export and download of comprehensive evaluation datasets and accuracy benchmarks in standard PDF format.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Business Model & Scalability -->
+      <section class="slide" data-slide="6">
+        <span class="slide-badge">💳 Monetization & Enterprise Scope</span>
+        <h2>Flexible Tiered Business Model</h2>
+        <p class="slide-desc">
+          A sustainable SaaS architecture accommodating students, professional copywriters, and enterprise institutions.
+        </p>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <span class="feature-icon">🌱</span>
+            <h4>Free Tier</h4>
+            <div style="font-size:18px; font-weight:bold; color:var(--primary-light); margin:4px 0;">$0 / Forever</div>
+            <p>Up to 1,000 words per check, foundational grammar & punctuation rules, and local offline history.</p>
+          </div>
+          <div class="feature-card" style="border-color:var(--primary-light); background:rgba(16,185,129,0.08);">
+            <span class="feature-icon">⭐</span>
+            <h4>Pro Tier</h4>
+            <div style="font-size:18px; font-weight:bold; color:var(--primary-light); margin:4px 0;">$9 / Monthly</div>
+            <p>Unlimited word counts, full Tashkeel diacritization, camera OCR text recognition, and premium AI writing assist.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🏢</span>
+            <h4>Enterprise</h4>
+            <div style="font-size:18px; font-weight:bold; color:var(--accent); margin:4px 0;">$29 / Monthly</div>
+            <p>Team licensing for publishers and universities, SLA support, and REST API access for custom integration.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Conclusion & Roadmap -->
+      <section class="slide" data-slide="7">
+        <span class="slide-badge">🚀 Project Trajectory & Vision</span>
+        <h2>Strategic Roadmap & Next Milestones</h2>
+        <p class="slide-desc">
+          Scaling NahwiFix to become the premier ecosystem for Arabic natural language processing and orthographic precision.
+        </p>
+        <div class="feature-grid two-cols">
+          <div class="feature-card">
+            <span class="feature-icon">🌐</span>
+            <h4>Browser & Office Extensions</h4>
+            <p>Developing Chrome, Edge, and Microsoft Word add-ins to deliver seamless, in-line grammar corrections across web forms and documents.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🎓</span>
+            <h4>Gamified Learning Portal</h4>
+            <p>Interactive grammatical quizzes and pedagogical lessons helping students master I'rab (الإعراب) and literary composition.</p>
+          </div>
+        </div>
+        <div style="margin-top:20px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+          <a href="/" class="btn-pres primary">
+            🚀 Launch Live Application
+          </a>
+          <a href="/evaluation_dataset.pdf" target="_blank" download class="btn-pres">
+            📄 Download Evaluation Dataset (PDF)
+          </a>
+          <a href="/slides?lang=ar" class="btn-pres">
+            🌐 النسخة العربية (Arabic Slides)
+          </a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Controls Footer -->
+    <footer class="pres-footer">
+      <div style="display:flex; gap:10px;">
+        <button class="btn-pres" id="btnPrevSlide" onclick="prevSlide()">
+          <span>←</span> Previous
+        </button>
+        <button class="btn-pres primary" id="btnNextSlide" onclick="nextSlide()">
+          Next <span>→</span>
+        </button>
+      </div>
+
+      <!-- Dots navigation -->
+      <div class="slide-dots" id="slideDots">
+        <div class="dot active" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
+        <div class="dot" onclick="goToSlide(4)"></div>
+        <div class="dot" onclick="goToSlide(5)"></div>
+        <div class="dot" onclick="goToSlide(6)"></div>
+        <div class="dot" onclick="goToSlide(7)"></div>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <button class="btn-pres" onclick="window.print()" title="Print or Save as PDF">
+          🖨️ Print / Save PDF
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- External quick actions -->
+  <div class="toolbar-actions">
+    <a href="/" class="btn-pres">
+      <span>📱</span> Back to App & Checker
+    </a>
+    <a href="/slides?lang=ar" class="btn-pres">
+      <span>🇸🇦</span> View Arabic Version (العرض بالعربية)
+    </a>
+    <span style="font-size:12px; color:var(--text-muted);">Navigate with keyboard arrows (← / →) or Spacebar</span>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 7;
+
+    function updateSlideUI() {
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      const activeSlide = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
+      if (activeSlide) activeSlide.classList.add('active');
+
+      document.querySelectorAll('.dot').forEach((d, idx) => {
+        d.classList.toggle('active', idx + 1 === currentSlide);
+      });
+
+      const ind = document.getElementById('slideNumber');
+      if (ind) ind.innerText = `Slide ${currentSlide} of ${totalSlides}`;
+
+      const btnPrev = document.getElementById('btnPrevSlide');
+      const btnNext = document.getElementById('btnNextSlide');
+      if (btnPrev) btnPrev.style.opacity = currentSlide === 1 ? '0.5' : '1';
+      if (btnNext) {
+        if (currentSlide === totalSlides) {
+          btnNext.innerHTML = 'Restart <span>🔄</span>';
+        } else {
+          btnNext.innerHTML = 'Next <span>→</span>';
+        }
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+      } else {
+        currentSlide = 1;
+      }
+      updateSlideUI();
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlideUI();
+      }
+    }
+
+    function goToSlide(num) {
+      if (num >= 1 && num <= totalSlides) {
+        currentSlide = num;
+        updateSlideUI();
+      }
+    }
+
+    function togglePresentationFullscreen() {
+      const elem = document.getElementById('presContainer');
+      if (!document.fullscreenElement) {
+        if (elem.requestFullscreen) elem.requestFullscreen();
+        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      }
+    });
+
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    document.addEventListener('touchend', e => {
+      const diff = e.changedTouches[0].screenX - touchStartX;
+      if (diff > 50) nextSlide();
+      else if (diff < -50) prevSlide();
+    }, false);
+
+    updateSlideUI();
+  </script>
+</body>
+</html>

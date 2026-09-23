@@ -98,12 +98,15 @@ import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nahwifix.data.HistoryEntity
 import com.example.nahwifix.model.AppLanguage
 import com.example.nahwifix.model.CorrectionCategory
 import com.example.nahwifix.model.CorrectionItem
 import com.example.nahwifix.model.CorrectionResult
 import com.example.nahwifix.ui.NahwiFixViewModel
+import com.example.nahwifix.ui.components.ArabicProcessingLoadingIndicator
 import com.example.nahwifix.ui.components.NahwiFixLogo
+import com.example.nahwifix.ui.components.RecentAnalysisHistoryList
 import com.example.nahwifix.ui.theme.BadgeAgreement
 import com.example.nahwifix.ui.theme.BadgeGrammar
 import com.example.nahwifix.ui.theme.BadgePunctuation
@@ -138,11 +141,18 @@ fun ArabicCorrectionScreen(
     // Microphone / Dictation State
     val isListeningToVoice by viewModel.isListeningToVoice.collectAsState()
 
+    // Room Database History State
+    val historyList by viewModel.historyList.collectAsState()
+
     ArabicCorrectionContent(
         inputText = inputText,
         isAnalyzing = isAnalyzing,
         result = result,
         language = language,
+        historyList = historyList,
+        onSelectHistory = { viewModel.restoreHistoryToInput(it) },
+        onDeleteHistory = { viewModel.deleteHistoryItem(it) },
+        onClearAllHistory = { viewModel.clearAllHistory() },
         statusMessage = statusMessage,
         isGeneratingWithAi = isGeneratingWithAi,
         aiWritingPrompt = aiWritingPrompt,
@@ -189,6 +199,10 @@ fun ArabicCorrectionContent(
     isAnalyzing: Boolean,
     result: CorrectionResult,
     language: AppLanguage,
+    historyList: List<HistoryEntity> = emptyList(),
+    onSelectHistory: (HistoryEntity) -> Unit = {},
+    onDeleteHistory: (HistoryEntity) -> Unit = {},
+    onClearAllHistory: () -> Unit = {},
     statusMessage: String? = null,
     isGeneratingWithAi: Boolean = false,
     aiWritingPrompt: String = "",
@@ -872,7 +886,7 @@ fun ArabicCorrectionContent(
                                         color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
                                     ) {
                                         Text(
-                                            text = "Gemini",
+                                            text = if (isAr) "ذكي" else "AI",
                                             style = MaterialTheme.typography.labelSmall,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.primary,
@@ -881,7 +895,7 @@ fun ArabicCorrectionContent(
                                     }
                                 }
                                 Text(
-                                    text = if (isAr) "صياغة نصوص فصيحة، رسائل ومقالات" else "Compose & rephrase Arabic texts",
+                                    text = if (isAr) "صياغة نصوص فصيحة، رسائل، ومقالات باحترافية" else "Compose & rephrase Arabic texts",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -1489,7 +1503,7 @@ fun ArabicCorrectionContent(
                             modifier = Modifier
                                 .weight(1f)
                                 .height(52.dp)
-                                .testTag("correct_button"),
+                                .testTag("check_button"),
                             shape = RoundedCornerShape(14.dp)
                         ) {
                             if (isAnalyzing) {
@@ -1513,6 +1527,28 @@ fun ArabicCorrectionContent(
                         }
                     }
                 }
+            }
+        }
+
+        // Recent Grammar Analysis Results from Room Database (List component below input area)
+        item {
+            RecentAnalysisHistoryList(
+                historyList = historyList,
+                language = language,
+                onSelectHistory = onSelectHistory,
+                onDeleteHistory = onDeleteHistory,
+                onClearAllHistory = onClearAllHistory,
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+        }
+
+        // Smooth Animated Loading Indicator when application is analyzing / processing text
+        if (isAnalyzing) {
+            item {
+                ArabicProcessingLoadingIndicator(
+                    language = language,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
             }
         }
 
@@ -1698,7 +1734,9 @@ fun ArabicCorrectionContent(
         if (result.items.isNotEmpty()) {
             item {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("results_display_container"),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
