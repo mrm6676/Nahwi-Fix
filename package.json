@@ -8,5 +8,7 @@
     "start": "node ./server.js",
     "dev": "node ./server.js"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
 }
