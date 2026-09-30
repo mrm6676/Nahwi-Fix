@@ -532,7 +532,6 @@
   <div class="device-frame">
     <div class="status-bar">
       <span>NahwiFix Live Interactive Demo</span>
-      <span id="clockDisplay">9:41 AM • 100%</span>
     </div>
     <header>
       <div class="logo-badge" onclick="switchNav('Checker')">
@@ -1051,55 +1050,55 @@
 
       // 1. Hamza rules
       const hamza = {
-        'الى': ['إلى', 'حرف جر يبدأ بهمزة قطع مكسورة', 'Preposition that starts with a hamzat qat' under the alif'],
-        'ان': ['إنّ', 'حرف ناسخ يبدأ بهمزة قطع مكسورة مشددة النون', 'Accusative particle (Inna) starting with hamzat qat' and doubled nun'],
-        'او': ['أو', 'حرف عطف يبدأ بهمزة قطع مفتوحة', 'Conjunction particle starting with open hamzat qat''],
-        'اذا': ['إذا', 'ظرف يبدأ بهمزة قطع مكسورة', 'Conditional adverb starting with hamzat qat''],
-        'الا': ['إلا', 'أداة استثناء تبدأ بهمزة قطع مكسورة', 'Exceptive particle starting with hamzat qat''],
-        'اما': ['أما', 'حرف تفصيل يبدأ بهمزة قطع مفتوحة', 'Explicative particle starting with open hamzat qat''],
-        'اين': ['أين', 'اسم استفهام يبدأ بهمزة قطع مفتوحة', 'Interrogative noun starting with open hamzat qat''],
-        'انت': ['أنتَ', 'ضمير مخاطب يبدأ بهمزة قطع مفتوحة', 'Second-person pronoun starting with open hamzat qat''],
-        'انتم': ['أنتم', 'ضمير مخاطب للجمع يبدأ بهمزة قطع', 'Plural second-person pronoun starting with hamzat qat''],
-        'انا': ['أنا', 'ضمير متكلم مفرد يبدأ بهمزة قطع مفتوحة', 'First-person singular pronoun starting with open hamzat qat''],
-        'اخذ': ['أخذ', 'فعل ماض ثلاثي مهموز يبدأ بهمزة قطع', 'Trilateral past verb starting with hamzat qat''],
-        'اكل': ['أكل', 'فعل ماض ثلاثي مهموز يبدأ بهمزة قطع', 'Trilateral past verb starting with hamzat qat''],
-        'احمد': ['أحمد', 'اسم علم وزنه أفعل يبدأ بهمزة قطع', 'Proper noun on the weight of Af'al with hamzat qat''],
-        'اعلان': ['إعلان', 'مصدر الفعل الرباعي أعلن همزته قطع مكسورة', 'Verbal noun of form IV with hamzat qat''],
-        'اصدار': ['إصدار', 'مصدر الفعل الرباعي همزته قطع', 'Verbal noun of form IV with hamzat qat''],
-        'انجاز': ['إنجاز', 'مصدر الفعل الرباعي همزته قطع', 'Verbal noun of form IV with hamzat qat''],
-        'انتاج': ['إنتاج', 'مصدر رباعي همزته قطع', 'Verbal noun of form IV with hamzat qat''],
-        'اكرام': ['إكرام', 'مصدر رباعي همزته قطع مكسورة', 'Verbal noun of form IV with hamzat qat''],
-        'احسان': ['إحسان', 'مصدر رباعي همزته قطع مكسورة', 'Verbal noun of form IV with hamzat qat''],
-        'اكثر': ['أكثر', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
-        'اكبر': ['أكبر', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
-        'اصغر': ['أصغر', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
-        'افضل': ['أفضل', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
-        'احسن': ['أحسن', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
-        'اقل': ['أقل', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
-        'اجمل': ['أجمل', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
-        'اول': ['أول', 'اسم همزته قطع', 'Noun starting with hamzat qat''],
+        'الى': ['إلى', 'حرف جر يبدأ بهمزة قطع مكسورة', 'Preposition that starts with a hamzat qat under the alif'],
+        'ان': ['إنّ', 'حرف ناسخ يبدأ بهمزة قطع مكسورة مشددة النون', 'Accusative particle (Inna) starting with hamzat qat and doubled nun'],
+        'او': ['أو', 'حرف عطف يبدأ بهمزة قطع مفتوحة', 'Conjunction particle starting with open hamzat qat'],
+        'اذا': ['إذا', 'ظرف يبدأ بهمزة قطع مكسورة', 'Conditional adverb starting with hamzat qat'],
+        'الا': ['إلا', 'أداة استثناء تبدأ بهمزة قطع مكسورة', 'Exceptive particle starting with hamzat qat'],
+        'اما': ['أما', 'حرف تفصيل يبدأ بهمزة قطع مفتوحة', 'Explicative particle starting with open hamzat qat'],
+        'اين': ['أين', 'اسم استفهام يبدأ بهمزة قطع مفتوحة', 'Interrogative noun starting with open hamzat qat'],
+        'انت': ['أنتَ', 'ضمير مخاطب يبدأ بهمزة قطع مفتوحة', 'Second-person pronoun starting with open hamzat qat'],
+        'انتم': ['أنتم', 'ضمير مخاطب للجمع يبدأ بهمزة قطع', 'Plural second-person pronoun starting with hamzat qat'],
+        'انا': ['أنا', 'ضمير متكلم مفرد يبدأ بهمزة قطع مفتوحة', 'First-person singular pronoun starting with open hamzat qat'],
+        'اخذ': ['أخذ', 'فعل ماض ثلاثي مهموز يبدأ بهمزة قطع', 'Trilateral past verb starting with hamzat qat'],
+        'اكل': ['أكل', 'فعل ماض ثلاثي مهموز يبدأ بهمزة قطع', 'Trilateral past verb starting with hamzat qat'],
+        'احمد': ['أحمد', 'اسم علم وزنه أفعل يبدأ بهمزة قطع', 'Proper noun on the weight of Afal with hamzat qat'],
+        'اعلان': ['إعلان', 'مصدر الفعل الرباعي أعلن همزته قطع مكسورة', 'Verbal noun of form IV with hamzat qat'],
+        'اصدار': ['إصدار', 'مصدر الفعل الرباعي همزته قطع', 'Verbal noun of form IV with hamzat qat'],
+        'انجاز': ['إنجاز', 'مصدر الفعل الرباعي همزته قطع', 'Verbal noun of form IV with hamzat qat'],
+        'انتاج': ['إنتاج', 'مصدر رباعي همزته قطع', 'Verbal noun of form IV with hamzat qat'],
+        'اكرام': ['إكرام', 'مصدر رباعي همزته قطع مكسورة', 'Verbal noun of form IV with hamzat qat'],
+        'احسان': ['إحسان', 'مصدر رباعي همزته قطع مكسورة', 'Verbal noun of form IV with hamzat qat'],
+        'اكثر': ['أكثر', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat'],
+        'اكبر': ['أكبر', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat'],
+        'اصغر': ['أصغر', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat'],
+        'افضل': ['أفضل', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat'],
+        'احسن': ['أحسن', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat'],
+        'اقل': ['أقل', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat'],
+        'اجمل': ['أجمل', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat'],
+        'اول': ['أول', 'اسم همزته قطع', 'Noun starting with hamzat qat'],
         'اخر': ['آخر', 'اسم يبدأ بمدّة', 'Noun starting with madda (long alif)'],
-        'اهم': ['أهم', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
-        'اصبح': ['أصبح', 'فعل ماض ناسخ همزته قطع', 'Incomplete past verb starting with hamzat qat''],
-        'اراد': ['أراد', 'فعل رباعي همزته قطع', 'Form IV past verb with hamzat qat''],
-        'ادارة': ['إدارة', 'مصدر رباعي همزته قطع', 'Form IV verbal noun with hamzat qat''],
-        'اعادة': ['إعادة', 'مصدر رباعي همزته قطع', 'Form IV verbal noun with hamzat qat''],
-        'اضافة': ['إضافة', 'مصدر رباعي همزته قطع', 'Form IV verbal noun with hamzat qat''],
-        'اكد': ['أكد', 'فعل ماض همزته قطع', 'Past verb starting with hamzat qat''],
-        'اشار': ['أشار', 'فعل ماض همزته قطع', 'Form IV past verb with hamzat qat''],
-        'اوضح': ['أوضح', 'فعل ماض همزته قطع', 'Form IV past verb with hamzat qat''],
-        'اعلن': ['أعلن', 'فعل ماض همزته قطع', 'Form IV past verb with hamzat qat''],
-        'اطفال': ['أطفال', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
-        'اسماء': ['أسماء', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
-        'ارقام': ['أرقام', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
-        'ايام': ['أيام', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
-        'امور': ['أمور', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
-        'اعمال': ['أعمال', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
-        'اهداف': ['أهداف', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
-        'افكار': ['أفكار', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
-        'انواع': ['أنواع', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
-        'اشخاص': ['أشخاص', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
-        'اشياء': ['أشياء', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
+        'اهم': ['أهم', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat'],
+        'اصبح': ['أصبح', 'فعل ماض ناسخ همزته قطع', 'Incomplete past verb starting with hamzat qat'],
+        'اراد': ['أراد', 'فعل رباعي همزته قطع', 'Form IV past verb with hamzat qat'],
+        'ادارة': ['إدارة', 'مصدر رباعي همزته قطع', 'Form IV verbal noun with hamzat qat'],
+        'اعادة': ['إعادة', 'مصدر رباعي همزته قطع', 'Form IV verbal noun with hamzat qat'],
+        'اضافة': ['إضافة', 'مصدر رباعي همزته قطع', 'Form IV verbal noun with hamzat qat'],
+        'اكد': ['أكد', 'فعل ماض همزته قطع', 'Past verb starting with hamzat qat'],
+        'اشار': ['أشار', 'فعل ماض همزته قطع', 'Form IV past verb with hamzat qat'],
+        'اوضح': ['أوضح', 'فعل ماض همزته قطع', 'Form IV past verb with hamzat qat'],
+        'اعلن': ['أعلن', 'فعل ماض همزته قطع', 'Form IV past verb with hamzat qat'],
+        'اطفال': ['أطفال', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat'],
+        'اسماء': ['أسماء', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat'],
+        'ارقام': ['أرقام', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat'],
+        'ايام': ['أيام', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat'],
+        'امور': ['أمور', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat'],
+        'اعمال': ['أعمال', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat'],
+        'اهداف': ['أهداف', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat'],
+        'افكار': ['أفكار', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat'],
+        'انواع': ['أنواع', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat'],
+        'اشخاص': ['أشخاص', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat'],
+        'اشياء': ['أشياء', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat'],
         'إسم': ['اسم', 'من الأسماء العشرة السماعية همزتها همزة وصل', 'One of the ten standard nouns that take hamzat wasl without hamza'],
         'إبن': ['ابن', 'همزة وصل سماعية تسقط نطقا ووصلا', 'Standard noun taking hamzat wasl without written hamza'],
         'إبنة': ['ابنة', 'همزة وصل سماعية تسقط وصلا', 'Standard noun taking hamzat wasl without written hamza']
@@ -1165,7 +1164,7 @@
       const alifMaqsura = {
         'علي': ['على', 'حرف جر ينتهي بألف مقصورة وليس ياء', 'Preposition ending in alif maqsura (no dots)'],
         'حتي': ['حتى', 'أداة غاية تنتهي بألف مقصورة', 'Particle ending in alif maqsura'],
-        'الي': ['إلى', 'حرف جر ينتهي بألف مقصورة مع همزة قطع', 'Preposition with hamzat qat' ending in alif maqsura'],
+        'الي': ['إلى', 'حرف جر ينتهي بألف مقصورة مع همزة قطع', 'Preposition with hamzat qat ending in alif maqsura'],
         'بلي': ['بلى', 'حرف جواب ينتهي بألف مقصورة', 'Answer particle ending in alif maqsura'],
         'لدي': ['لدى', 'ظرف ينتهي بألف مقصورة', 'Adverb ending in alif maqsura']
       };
@@ -1316,7 +1315,7 @@
         'عصفورا': ['عصفوراً', 'تنوين الفتح يستوجب إضافة ألف التنوين مع فتحتين', 'Accusative tanween requires alif with double fatha'],
         'جميلا': ['جميلاً', 'صفة منصوبة بتنوين الفتح مع ألف التنوين', 'Accusative adjective requiring tanween al-fath with alif'],
         'شكرا': ['شكراً', 'مفعول مطلق منصوب بتنوين الفتح', 'Cognate accusative noun requiring tanween al-fath'],
-        'اهلا': ['أهلاً', 'منصوب على إضمار فعل مع تنوين الفتح والهمزة', 'Accusative noun requiring hamzat qat' and tanween'],
+        'اهلا': ['أهلاً', 'منصوب على إضمار فعل مع تنوين الفتح والهمزة', 'Accusative noun requiring hamzat qat and tanween'],
         'سهلا': ['سهلاً', 'معطوف منصوب بتنوين الفتح وألف النصب', 'Accusative noun requiring tanween al-fath'],
         'مساءا': ['مساءً', 'لا تضاف ألف التنوين بعد همزة متطرفة مسبوقة بألف', 'No additional alif added after a hamza preceded by alif']
       };
@@ -1404,8 +1403,7 @@
       let complexityLevel = 'simple';
       if (words > 0) {
         const avgWordLen = charsWithoutSpaces / words;
-        const sentences = text.split(/[.!؟!
-]+/).filter(s => s.trim().length > 0).length || 1;
+        const sentences = text.split(/[.!؟!\n]+/).filter(s => s.trim().length > 0).length || 1;
         const wordsPerSentence = words / sentences;
         if (avgWordLen > 5.5 || wordsPerSentence > 18) complexityLevel = 'complex';
         else if (avgWordLen > 4.5 || wordsPerSentence > 10) complexityLevel = 'moderate';
@@ -1677,7 +1675,7 @@
       const input = document.getElementById('aiPromptInput');
       if (input) {
         input.value = text;
-        input.focus();
+        if (input.focus) input.focus();
         showToast(currentLang === 'ar' ? 'تم اختيار القالب' : 'Template selected', 'info');
       }
     }
@@ -1918,9 +1916,9 @@
         btnNextIssue: 'Next <span>➡</span>',
         rulesGuideTitle: 'Grammar & Punctuation Rules Guide',
         rulesGuideSub: 'Clear guidelines supported by verified practical examples',
-        rule1Title: 'Hamzat Al-Wasl & Al-Qat'',
+        rule1Title: 'Hamzat Al-Wasl & Al-Qat',
         rule1Badge: 'Spelling',
-        rule1Desc: 'Hamzat al-qat' is pronounced and written (إلى, أرسل, إن). Hamzat al-wasl is omitted in connected speech (استمع, اكتب).',
+        rule1Desc: 'Hamzat al-qat is pronounced and written (إلى, أرسل, إن). Hamzat al-wasl is omitted in connected speech (استمع, اكتب).',
         rule1Example: 'Correct: ذهب محمدٌ إلى المدرسةِ',
         rule1Btn: '⚡ Try this rule in Checker',
         rule2Title: 'Subject-Verb Agreement',
@@ -2010,7 +2008,7 @@
 
       // Update Tone options
       const toneSelect = document.getElementById('aiToneSelect');
-      if (toneSelect && toneSelect.options.length >= 5) {
+      if (toneSelect && toneSelect.options && toneSelect.options.length >= 5) {
         toneSelect.options[0].text = dict.toneFormal;
         toneSelect.options[1].text = dict.toneCreative;
         toneSelect.options[2].text = dict.toneConcise;
@@ -2056,17 +2054,17 @@
 
       let buttonEl = el;
       if (!buttonEl && typeof event !== 'undefined' && event && event.target) {
-        buttonEl = event.target.closest('.nav-item');
+        buttonEl = (event.target.closest ? event.target.closest('.nav-item') : null) || event.target;
       }
       if (!buttonEl) {
-        buttonEl = document.querySelector('.nav-item[data-nav="' + name + '"]');
+        buttonEl = document.querySelector ? document.querySelector('.nav-item[data-nav="' + name + '"]') : null;
       } else {
-        buttonEl = buttonEl.closest('.nav-item') || buttonEl;
+        buttonEl = (buttonEl.closest ? buttonEl.closest('.nav-item') : null) || buttonEl;
       }
-      if (buttonEl) buttonEl.classList.add('active');
+      if (buttonEl && buttonEl.classList) buttonEl.classList.add('active');
 
-      const scrollContainer = document.querySelector('.main-scroll');
-      if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+      const scrollContainer = document.querySelector ? document.querySelector('.main-scroll') : null;
+      if (scrollContainer && scrollContainer.scrollTo) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Reader Mode & Accessibility Functions
