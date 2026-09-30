@@ -42,13 +42,31 @@ def get_file_response(file_path, content_type=None):
     except Exception:
         return None, None
 
-def route_request(path_str, query_str=""):
+def route_request(path_str, query_str="", headers=None):
     """
     Central router that maps requested URL path to response content,
-    status code, and headers.
+    status code, and headers. Handles Vercel rewritten destination paths,
+    headers, and query parameters.
     """
-    clean_path = path_str.split("?")[0].rstrip("/")
-    if not clean_path:
+    # 1. Resolve effective path considering Vercel rewrites
+    effective_path = path_str
+    if query_str:
+        parsed_qs = parse_qs(query_str)
+        if "__path" in parsed_qs and parsed_qs["__path"]:
+            raw_target = parsed_qs["__path"][0]
+            effective_path = "/" + raw_target.lstrip("/")
+
+    if headers and (not effective_path or effective_path in ("/", "/api/index.py", "/api/index", "/api")):
+        orig_header = (
+            headers.get("x-matched-path")
+            or headers.get("x-forwarded-uri")
+            or headers.get("x-original-uri")
+        )
+        if orig_header:
+            effective_path = orig_header
+
+    clean_path = effective_path.split("?")[0].rstrip("/")
+    if not clean_path or clean_path in ("/api/index.py", "/api/index", "/api", "/index.py"):
         clean_path = "/"
 
     # 1. Health check endpoint
@@ -75,24 +93,24 @@ def route_request(path_str, query_str=""):
         target = os.path.join(BASE_DIR, "evaluation_dataset.pdf")
         data, ctype = get_file_response(target, "application/pdf")
         if data:
-            headers = [
+            headers_list = [
                 ("Content-Type", ctype),
                 ("Content-Disposition", 'inline; filename="NahwiFix_Evaluation_Dataset.pdf"'),
                 ("Content-Length", str(len(data))),
             ]
-            return 200, headers, data
+            return 200, headers_list, data
 
     # 5. Promo banner image
     if clean_path in ("/promo_banner.jpg", "/promo.jpg", "/ad.jpg"):
         target = os.path.join(BASE_DIR, "promo_banner.jpg")
         data, ctype = get_file_response(target, "image/jpeg")
         if data:
-            headers = [
+            headers_list = [
                 ("Content-Type", ctype),
                 ("Cache-Control", "public, max-age=86400"),
                 ("Content-Length", str(len(data))),
             ]
-            return 200, headers, data
+            return 200, headers_list, data
 
     # 6. Static files by explicit filename at root
     static_files = {
@@ -142,10 +160,16 @@ def route_request(path_str, query_str=""):
 # 1. WSGI Entrypoint for Vercel (@vercel/python) and WSGI Servers (Gunicorn)
 # ==============================================================================
 def app(environ, start_response):
-    """Standard WSGI entrypoint."""
+    """Standard WSGI entrypoint with header and rewrite forwarding."""
+    headers_map = {}
+    for k, v in environ.items():
+        if k.startswith("HTTP_"):
+            hdr_name = k[5:].replace("_", "-").lower()
+            headers_map[hdr_name] = v
+
     path = environ.get("PATH_INFO", "/")
     query = environ.get("QUERY_STRING", "")
-    status_code, headers, body = route_request(path, query)
+    status_code, headers_list, body = route_request(path, query, headers_map)
 
     status_messages = {
         200: "200 OK",
@@ -153,7 +177,7 @@ def app(environ, start_response):
         500: "500 Internal Server Error"
     }
     status_str = status_messages.get(status_code, f"{status_code} Status")
-    start_response(status_str, headers)
+    start_response(status_str, headers_list)
     return [body]
 
 
@@ -161,21 +185,23 @@ def app(environ, start_response):
 # 2. Vercel BaseHTTPRequestHandler Entrypoint
 # ==============================================================================
 class handler(BaseHTTPRequestHandler):
-    """Vercel BaseHTTPRequestHandler entrypoint."""
+    """Vercel BaseHTTPRequestHandler entrypoint with rewrite support."""
     def do_GET(self):
         parsed = urlparse(self.path)
-        status_code, headers, body = route_request(parsed.path, parsed.query)
+        headers_map = {k.lower(): v for k, v in self.headers.items()}
+        status_code, headers_list, body = route_request(parsed.path, parsed.query, headers_map)
         self.send_response(status_code)
-        for key, value in headers:
+        for key, value in headers_list:
             self.send_header(key, value)
         self.end_headers()
         self.wfile.write(body)
 
     def do_HEAD(self):
         parsed = urlparse(self.path)
-        status_code, headers, body = route_request(parsed.path, parsed.query)
+        headers_map = {k.lower(): v for k, v in self.headers.items()}
+        status_code, headers_list, body = route_request(parsed.path, parsed.query, headers_map)
         self.send_response(status_code)
-        for key, value in headers:
+        for key, value in headers_list:
             self.send_header(key, value)
         self.end_headers()
 
