@@ -188,7 +188,8 @@ class handler(BaseHTTPRequestHandler):
 # 3. Standalone Execution (`python3 main.py`)
 # ==============================================================================
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", os.environ.get("DEFAULT_APP_PORT", 3000)))
+    env_port = os.environ.get("PORT")
+    port = int(os.environ.get("DEFAULT_APP_PORT", 3000 if env_port == "8080" else (env_port or 3000)))
     print(f"🚀 NahwiFix server starting on http://0.0.0.0:{port}")
     try:
         with make_server("0.0.0.0", port, app) as httpd:

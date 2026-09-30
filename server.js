@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = process.env.PORT || process.env.DEFAULT_APP_PORT || 3000;
+const PORT = process.env.DEFAULT_APP_PORT || (process.env.PORT && process.env.PORT !== '8080' ? process.env.PORT : 3000);
 
 // Path to main index.html
 const indexPath = path.join(__dirname, 'index.html');
