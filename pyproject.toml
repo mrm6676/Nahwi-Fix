@@ -6,6 +6,17 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
 
+[tool.uv]
+package = false
+
+[tool.setuptools]
+py-modules = ["main"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["api*"]
+exclude = ["app*", "gradle*", ".gradle*", "android*", "scripts*"]
+
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"

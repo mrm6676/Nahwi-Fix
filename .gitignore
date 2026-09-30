@@ -8,3 +8,5 @@ app/build/
 *.aab
 .idea/
 *.iml
+.venv
+__pycache__
