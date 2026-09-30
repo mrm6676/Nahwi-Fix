@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NahwiFix</string>
+    <string name="tagline">Arabic Grammar &amp; Punctuation Checker</string>
+    <string name="tagline_ar">مصحح النحو والترقيم العربي</string>
+
+    <!-- Navigation -->
+    <string name="nav_checker">Checker</string>
+    <string name="nav_rules">Rules</string>
+    <string name="nav_pricing">Pricing</string>
+    <string name="nav_account">Account</string>
+    <string name="nav_terms">Terms</string>
+
+    <!-- Checker Screen -->
+    <string name="checker_title">Arabic Text Proofreading &amp; Correction</string>
+    <string name="checker_subtitle">Inspect grammar, spelling, and punctuation errors with instant precision.</string>
+    <string name="input_placeholder">Speak with me or type your Arabic text here...</string>
+    <string name="btn_check">Start Checking Text</string>
+    <string name="btn_clear">Clear</string>
+    <string name="btn_copy">Copy Corrected Text</string>
+    <string name="btn_apply_all">Apply All Corrections</string>
+
+    <!-- Options & Attachments -->
+    <string name="opt_deep_think">Think Before Responding</string>
+    <string name="opt_upload_image">Upload Image</string>
+    <string name="opt_upload_audio">Upload Audio</string>
+    <string name="opt_upload_video">Upload Video</string>
+    <string name="opt_read_aloud">Generate Audio</string>
+
+    <!-- Write with AI -->
+    <string name="write_with_ai_title">Write with AI</string>
+    <string name="write_with_ai_subtitle">Draft fluent Arabic texts, letters, essays, and rephrase with professional precision</string>
+    <string name="write_with_ai_prompt_hint">Describe what you want to write, or choose a prompt template...</string>
+    <string name="write_with_ai_btn_generate">Generate with AI</string>
+    <string name="write_with_ai_btn_apply">Apply in Editor</string>
+    <string name="write_with_ai_btn_append">Append to Editor</string>
+    <string name="write_with_ai_tone_formal">Formal &amp; Fluent</string>
+    <string name="write_with_ai_tone_creative">Creative &amp; Rhetorical</string>
+    <string name="write_with_ai_tone_concise">Concise &amp; Direct</string>
+    <string name="write_with_ai_tone_academic">Academic &amp; Rigorous</string>
+    <string name="write_with_ai_tone_persuasive">Persuasive &amp; Impactful</string>
+
+    <!-- Stats & Categories -->
+    <string name="stat_words">words</string>
+    <string name="stat_characters">characters</string>
+    <string name="stat_issues">issues</string>
+    <string name="cat_grammar">Grammar &amp; Agreement</string>
+    <string name="cat_punctuation">Punctuation</string>
+    <string name="cat_spelling">Spelling &amp; Hamza</string>
+    <string name="cat_tanween">Tanween &amp; Case</string>
+
+    <!-- Inspector -->
+    <string name="inspector_title">Correction Details</string>
+    <string name="label_issue">Issue</string>
+    <string name="label_suggestion">Suggestion</string>
+    <string name="label_explanation">Grammar Explanation</string>
+    <string name="btn_apply">Apply This Correction</string>
+
+    <!-- Reader Mode & Accessibility -->
+    <string name="reader_mode_title">Accessible Voice Reader Mode</string>
+    <string name="reader_mode_subtitle">Dedicated to assisting individuals with reading difficulties and visual impairments through speech and font scaling</string>
+    <string name="reader_mode_listen_input">Listen to Original Text</string>
+    <string name="reader_mode_listen_corrected">Listen to Corrected Text</string>
+    <string name="reader_mode_stop">Stop Reading</string>
+    <string name="reader_mode_font_size">Comfortable Font Size</string>
+    <string name="reader_mode_high_contrast">High Contrast Mode</string>
+    <string name="reader_mode_speaking">Reading aloud now...</string>
+
+    <!-- Microphone / Voice Dictation -->
+    <string name="dictation_mic_btn">Voice Dictation via Microphone</string>
+    <string name="dictation_listening">Listening to your Arabic voice dictation... speak clearly</string>
+    <string name="dictation_stop">Stop Dictation</string>
+    <string name="dictation_hint">Speak in Arabic and your speech will be transcribed and proofread immediately</string>
+    <string name="dictation_permission_required">Microphone permission is required for voice dictation</string>
+    <string name="dictation_error">Speech recognition unavailable or microphone error</string>
+
+    <!-- Pricing -->
+    <string name="pricing_title">Choose the Right Plan for You</string>
+    <string name="pricing_subtitle">Flexible plans providing the tools you need for more accurate Arabic writing.</string>
+    <string name="plan_free">Basic Plan</string>
+    <string name="plan_free_price">Always Free</string>
+    <string name="plan_pro">Pro Plan</string>
+    <string name="plan_pro_price">$9 / month</string>
+
+    <!-- Auth -->
+    <string name="sign_in">Sign In</string>
+    <string name="create_account">Create Account</string>
+    <string name="email">Email Address</string>
+    <string name="password">Password</string>
+    <string name="username">Full Name</string>
+</resources>

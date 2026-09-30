@@ -112,11 +112,12 @@ def route_request(path_str, query_str=""):
             return 200, [("Content-Type", ctype), ("Content-Length", str(len(data)))], data
 
     # 7. Main Web Application (`index.html`)
-    index_path = os.path.join(BASE_DIR, "index.html")
-    if os.path.isfile(index_path):
-        data, ctype = get_file_response(index_path, "text/html; charset=utf-8")
-        if data:
-            return 200, [("Content-Type", ctype), ("Content-Length", str(len(data)))], data
+    if clean_path in ("/", "/index.html", "/index.htm", "/en", "/app"):
+        index_path = os.path.join(BASE_DIR, "index.html")
+        if os.path.isfile(index_path):
+            data, ctype = get_file_response(index_path, "text/html; charset=utf-8")
+            if data:
+                return 200, [("Content-Type", ctype), ("Content-Length", str(len(data)))], data
 
     # 8. Fallback to server.js extraction if index.html is missing
     server_js_path = os.path.join(BASE_DIR, "server.js")

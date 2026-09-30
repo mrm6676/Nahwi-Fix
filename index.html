@@ -625,12 +625,12 @@
           </div>
 
           <div id="writeAiContent" style="display:none; margin-top:14px;">
-            <div style="font-size:12px; font-weight:bold; margin-bottom:6px; color:var(--text-muted);">نماذج وقوالب جاهزة (انقر للاختيار):</div>
+            <div id="writeAiTemplatesLabel" style="font-size:12px; font-weight:bold; margin-bottom:6px; color:var(--text-muted);">نماذج وقوالب جاهزة (انقر للاختيار):</div>
             <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
-              <button class="sample-pill" onclick="setAiPrompt('اكتب رسالة شكر وتقدير رسمية موجهة لمدير العمل أو الزملاء بأسلوب فصيح ومؤثر.')">رسالة شكر رسمية</button>
-              <button class="sample-pill" onclick="setAiPrompt('صياغة طلب إجازة رسمي لجهة العمل مع خالص الاحترام والتقدير.')">طلب إجازة رسمي</button>
-              <button class="sample-pill" onclick="setAiPrompt('اكتب مقدمة مقال رصين وجذاب عن مكانة اللغة العربية وجماليات النحو والبلاغة.')">مقدمة مقال أدبي</button>
-              <button class="sample-pill" onclick="setAiPrompt('أعد صياغة النص المكتوب في المحرر بأسلوب عربي فصيح ورصين ومترابط.')">إعادة صياغة النص</button>
+              <button id="tplBtn0" class="sample-pill" onclick="setAiPrompt('اكتب رسالة شكر وتقدير رسمية موجهة لمدير العمل أو الزملاء بأسلوب فصيح ومؤثر.')">رسالة شكر رسمية</button>
+              <button id="tplBtn1" class="sample-pill" onclick="setAiPrompt('صياغة طلب إجازة رسمي لجهة العمل مع خالص الاحترام والتقدير.')">طلب إجازة رسمي</button>
+              <button id="tplBtn2" class="sample-pill" onclick="setAiPrompt('اكتب مقدمة مقال رصين وجذاب عن مكانة اللغة العربية وجماليات النحو والبلاغة.')">مقدمة مقال أدبي</button>
+              <button id="tplBtn3" class="sample-pill" onclick="setAiPrompt('أعد صياغة النص المكتوب في المحرر بأسلوب عربي فصيح ورصين ومترابط.')">إعادة صياغة النص</button>
             </div>
 
             <textarea id="aiPromptInput" rows="2" style="width:100%; border-radius:8px; border:1px solid var(--border); padding:8px; font-size:14px; margin-bottom:10px; resize:vertical;" placeholder="ماذا تريد أن يكتب الذكاء الاصطناعي؟ (مثال: خطاب تهنئة، بريد رسمي...)"></textarea>
@@ -694,12 +694,18 @@
             <button class="sample-pill" onclick="toggleSpeechRecognition()" style="padding:3px 10px; font-size:11px; background:#DC2626; color:#fff; border:none;">إيقاف</button>
           </div>
 
-          <textarea id="textInput" placeholder="تحدث معي بالمايكروفون أو اكتب نصك هنا...">ذهب محمد الى المدرسة، و هو يحمل كتبه وشاهد عصفورا جميلا.</textarea>
+          <textarea id="textInput" oninput="runCheck(false)" placeholder="تحدث معي بالمايكروفون أو اكتب نصك هنا...">ذهب محمد الى المدرسة، و هو يحمل كتبه وشاهد عصفورا جميلا.</textarea>
           
-          <div class="stats-bar">
-            <span id="statWords">10 كلمات</span>
-            <span id="statChars">54 أحرف</span>
-            <span id="statIssues" style="color:var(--error)">5 ملاحظات</span>
+          <div class="stats-bar" style="display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <span id="statWords" style="font-weight:700;">10 كلمات</span>
+              <span id="statChars" style="font-weight:600;">54 أحرف (45 بدون مسافات)</span>
+              <span id="statIssues" style="color:var(--error); font-weight:700;">5 ملاحظات</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--border); padding-top:4px; font-size:11px;">
+              <span id="statReadingTime" style="color:var(--primary); font-weight:700;">⏱️ وقت القراءة: أقل من دقيقة</span>
+              <span id="statComplexity" style="background:var(--border); padding:1px 8px; border-radius:10px; font-weight:600;">مستوى النص: بسيط</span>
+            </div>
           </div>
 
           <div id="statusBanner" style="display:none; background:var(--success-bg); color:var(--success); border:1px solid var(--success); padding:10px 14px; border-radius:10px; font-weight:bold; font-size:13px; text-align:center;">
@@ -781,51 +787,52 @@
 
       <!-- RULES VIEW -->
       <div id="viewRules" class="view-container">
-        <h3 style="margin-bottom: 12px;">دليل القواعد النحوية والترقيم</h3>
+        <h3 id="rulesGuideTitle" style="margin-bottom: 4px;">دليل القواعد النحوية والترقيم</h3>
+        <p id="rulesGuideSub" style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">قواعد مبسطة مدعومة بأمثلة تطبيقية واضحة</p>
         <div class="plan-card">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <strong>همزتا الوصل والقطع</strong>
-            <span class="badge spelling">إملاء</span>
+            <strong id="rule1Title">همزتا الوصل والقطع</strong>
+            <span id="rule1Badge" class="badge spelling">إملاء</span>
           </div>
-          <p style="font-size:12px; color:var(--text-muted); margin: 6px 0;">همزة القطع تثبت نطقاً ورسماً (إلى، أرسل، إن). همزة الوصل تسقط في درج الكلام (استمع، اكتب).</p>
-          <div style="font-size:12px; color:var(--success); font-weight:bold; margin-bottom:8px;">الصواب: ذهب محمدٌ إلى المدرسةِ</div>
-          <button class="btn-outline" style="width:100%; font-size:12px; padding:6px;" onclick="loadRuleIntoChecker('ذهب محمد الى المدرسه وحضر احمد')">
+          <p id="rule1Desc" style="font-size:12px; color:var(--text-muted); margin: 6px 0;">همزة القطع تثبت نطقاً ورسماً (إلى، أرسل، إن). همزة الوصل تسقط في درج الكلام (استمع، اكتب).</p>
+          <div id="rule1Example" style="font-size:12px; color:var(--success); font-weight:bold; margin-bottom:8px;">الصواب: ذهب محمدٌ إلى المدرسةِ</div>
+          <button id="rule1Btn" class="btn-outline" style="width:100%; font-size:12px; padding:6px;" onclick="loadRuleIntoChecker('ذهب محمد الى المدرسه وحضر احمد')">
             ⚡ تجربة هذه القاعدة في المصحح
           </button>
         </div>
         
         <div class="plan-card">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <strong>مطابقة الفعل للفاعل والمبتدأ</strong>
-            <span class="badge agreement">توافق</span>
+            <strong id="rule2Title">مطابقة الفعل للفاعل والمبتدأ</strong>
+            <span id="rule2Badge" class="badge agreement">توافق</span>
           </div>
-          <p style="font-size:12px; color:var(--text-muted); margin: 6px 0;">يؤنث الفعل مع الفاعل المؤنث الحقيقي ويطابق المبتدأ في التذكير والتأنيث والعدد.</p>
-          <div style="font-size:12px; color:var(--success); font-weight:bold; margin-bottom:8px;">الصواب: المعلمةُ تُساعدُ الطلاب</div>
-          <button class="btn-outline" style="width:100%; font-size:12px; padding:6px;" onclick="loadRuleIntoChecker('إن المعلمة يساعد الطلاب في فهم الدرس')">
+          <p id="rule2Desc" style="font-size:12px; color:var(--text-muted); margin: 6px 0;">يؤنث الفعل مع الفاعل المؤنث الحقيقي ويطابق المبتدأ في التذكير والتأنيث والعدد.</p>
+          <div id="rule2Example" style="font-size:12px; color:var(--success); font-weight:bold; margin-bottom:8px;">الصواب: المعلمةُ تُساعدُ الطلاب</div>
+          <button id="rule2Btn" class="btn-outline" style="width:100%; font-size:12px; padding:6px;" onclick="loadRuleIntoChecker('إن المعلمة يساعد الطلاب في فهم الدرس')">
             ⚡ تجربة هذه القاعدة في المصحح
           </button>
         </div>
 
         <div class="plan-card">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <strong>رسم تنوين الفتح والنصب</strong>
-            <span class="badge grammar">تنوين</span>
+            <strong id="rule3Title">رسم تنوين الفتح والنصب</strong>
+            <span id="rule3Badge" class="badge grammar">تنوين</span>
           </div>
-          <p style="font-size:12px; color:var(--text-muted); margin: 6px 0;">يُزاد ألف بعد تنوين الفتح في الأسماء المنونة (عصفوراً، جميلاً)، ولا تُزاد بعد التاء المربوطة أو الهمزة المسبوقة بألف (مساءً).</p>
-          <div style="font-size:12px; color:var(--success); font-weight:bold; margin-bottom:8px;">الصواب: شاهد عصفوراً جميلاً</div>
-          <button class="btn-outline" style="width:100%; font-size:12px; padding:6px;" onclick="loadRuleIntoChecker('شاهدت عصفورا جميلا يغرد مساءا')">
+          <p id="rule3Desc" style="font-size:12px; color:var(--text-muted); margin: 6px 0;">يُزاد ألف بعد تنوين الفتح في الأسماء المنونة (عصفوراً، جميلاً)، ولا تُزاد بعد التاء المربوطة أو الهمزة المسبوقة بألف (مساءً).</p>
+          <div id="rule3Example" style="font-size:12px; color:var(--success); font-weight:bold; margin-bottom:8px;">الصواب: شاهد عصفوراً جميلاً</div>
+          <button id="rule3Btn" class="btn-outline" style="width:100%; font-size:12px; padding:6px;" onclick="loadRuleIntoChecker('شاهدت عصفورا جميلا يغرد مساءا')">
             ⚡ تجربة هذه القاعدة في المصحح
           </button>
         </div>
 
         <div class="plan-card">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <strong>علامات الترقيم وواو العطف</strong>
-            <span class="badge punct">ترقيم</span>
+            <strong id="rule4Title">علامات الترقيم وواو العطف</strong>
+            <span id="rule4Badge" class="badge punct">ترقيم</span>
           </div>
-          <p style="font-size:12px; color:var(--text-muted); margin: 6px 0;">الفاصلة العربية (،) تلتصق بالكلمة السابقة، وواو العطف تتصل بالكلمة التالية مباشرة دون مسافة.</p>
-          <div style="font-size:12px; color:var(--success); font-weight:bold; margin-bottom:8px;">الصواب: نعم، شكراً لك وجزاك الله خيراً.</div>
-          <button class="btn-outline" style="width:100%; font-size:12px; padding:6px;" onclick="loadRuleIntoChecker('نعم , شكرا لك و جزاك الله خيرا ?')">
+          <p id="rule4Desc" style="font-size:12px; color:var(--text-muted); margin: 6px 0;">الفاصلة العربية (،) تلتصق بالكلمة السابقة، وواو العطف تتصل بالكلمة التالية مباشرة دون مسافة.</p>
+          <div id="rule4Example" style="font-size:12px; color:var(--success); font-weight:bold; margin-bottom:8px;">الصواب: نعم، شكراً لك وجزاك الله خيراً.</div>
+          <button id="rule4Btn" class="btn-outline" style="width:100%; font-size:12px; padding:6px;" onclick="loadRuleIntoChecker('نعم , شكرا لك و جزاك الله خيرا ?')">
             ⚡ تجربة هذه القاعدة في المصحح
           </button>
         </div>
@@ -833,16 +840,16 @@
 
       <!-- PRICING VIEW -->
       <div id="viewPricing" class="view-container">
-        <h3 style="margin-bottom: 8px;">خطط وأسعار NahwiFix</h3>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">اختر الخطة المناسبة لاحتياجاتك التدقيقية</p>
+        <h3 id="pricingTitle" style="margin-bottom: 8px;">خطط وأسعار NahwiFix</h3>
+        <p id="pricingSub" style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">اختر الخطة المناسبة لاحتياجاتك التدقيقية</p>
         
         <div class="plan-card" id="cardPlanFree">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h4>الخطة الأساسية</h4>
+            <h4 id="planFreeTitle">الخطة الأساسية</h4>
             <span id="badgePlanFree" class="badge grammar" style="background:#475569;">المفعلة</span>
           </div>
-          <div style="font-size:18px; font-weight:bold; margin: 4px 0;">مجاناً دائماً</div>
-          <p style="font-size:12px; color:var(--text-muted)">1,000 كلمة لكل فحص، قواعد النحو والترقيم الأساسية، سجل محلي.</p>
+          <div id="planFreePrice" style="font-size:18px; font-weight:bold; margin: 4px 0;">مجاناً دائماً</div>
+          <p id="planFreeDesc" style="font-size:12px; color:var(--text-muted)">1,000 كلمة لكل فحص، قواعد النحو والترقيم الأساسية، سجل محلي.</p>
           <button class="btn-outline" id="btnSelectFree" style="margin-top:10px; width:100%" onclick="selectPlan('free')">
             ✓ خطتك الحالية
           </button>
@@ -850,33 +857,33 @@
 
         <div class="plan-card pro" id="cardPlanPro">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h4>الخطة الاحترافية (Pro) ⭐</h4>
+            <h4 id="planProTitle">الخطة الاحترافية (Pro) ⭐</h4>
             <span id="badgePlanPro" class="badge agreement">الأكثر طلباً</span>
           </div>
-          <div style="font-size:20px; font-weight:800; margin: 4px 0;">$9 / شهرياً</div>
-          <p style="font-size:12px; line-height:1.5;">فحص غير محدود، تشكيل كامل بالحركات، تعرف بصري OCR، وتوليد نطق صوتي وتصدير PDF.</p>
+          <div id="planProPrice" style="font-size:20px; font-weight:800; margin: 4px 0;">$9 / شهرياً</div>
+          <p id="planProDesc" style="font-size:12px; line-height:1.5;">فحص غير محدود، تشكيل كامل بالحركات، تعرف بصري OCR، وتوليد نطق صوتي وتصدير PDF.</p>
           <button class="btn-primary" id="btnSelectPro" style="margin-top:10px; width:100%" onclick="selectPlan('pro')">
-            <span>⭐</span> ترقية إلى Pro الآن
+            <span id="btnSelectProLabel"><span>⭐</span> ترقية إلى Pro الآن</span>
           </button>
         </div>
 
         <div class="plan-card" id="cardPlanEnterprise">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h4>خطة المؤسسات (Enterprise)</h4>
-            <span class="badge spelling">للشركات</span>
+            <h4 id="planEnterpriseTitle">خطة المؤسسات (Enterprise)</h4>
+            <span id="badgePlanEnterprise" class="badge spelling">للشركات</span>
           </div>
-          <div style="font-size:18px; font-weight:bold; margin: 4px 0;">$29 / شهرياً</div>
-          <p style="font-size:12px; color:var(--text-muted)">دعم فني مخصص، تراخيص متعددة للفرق، والوصول لواجهة البرمجة (API).</p>
+          <div id="planEnterprisePrice" style="font-size:18px; font-weight:bold; margin: 4px 0;">$29 / شهرياً</div>
+          <p id="planEnterpriseDesc" style="font-size:12px; color:var(--text-muted)">دعم فني مخصص، تراخيص متعددة للفرق، والوصول لواجهة البرمجة (API).</p>
           <button class="btn-secondary" id="btnSelectEnterprise" style="margin-top:10px; width:100%" onclick="selectPlan('enterprise')">
-            طلب اشتراك المؤسسات
+            <span id="btnSelectEnterpriseLabel">طلب اشتراك المؤسسات</span>
           </button>
         </div>
       </div>
 
       <!-- ACCOUNT VIEW -->
       <div id="viewAccount" class="view-container">
-        <h3 style="margin-bottom: 8px;">حساب NahwiFix</h3>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">مزامنة النصوص والمستندات وحفظ الإعدادات المفضلة</p>
+        <h3 id="accountTitle" style="margin-bottom: 8px;">حساب NahwiFix</h3>
+        <p id="accountSub" style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">مزامنة النصوص والمستندات وحفظ الإعدادات المفضلة</p>
 
         <!-- Logged out form -->
         <div id="authLoggedOutCard" class="editor-card">
@@ -886,21 +893,21 @@
           </div>
 
           <div id="authUsernameRow" style="display:none;">
-            <label style="font-size:11px; font-weight:bold;">الاسم الكامل:</label>
+            <label id="lblUsername" style="font-size:11px; font-weight:bold;">الاسم الكامل:</label>
             <input type="text" id="authUsernameInput" value="فادي ناصر" placeholder="اسمك الكامل" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; margin-top:3px; margin-bottom:8px; font-size:13px; font-family:inherit; background:var(--bg); color:var(--text);">
           </div>
 
-          <label style="font-size:11px; font-weight:bold;">البريد الإلكتروني:</label>
+          <label id="lblEmail" style="font-size:11px; font-weight:bold;">البريد الإلكتروني:</label>
           <input type="email" id="authEmailInput" value="Fadiyano44@gmail.com" placeholder="example@email.com" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; margin-top:3px; margin-bottom:8px; font-size:13px; font-family:inherit; background:var(--bg); color:var(--text);">
 
-          <label style="font-size:11px; font-weight:bold;">كلمة المرور:</label>
+          <label id="lblPassword" style="font-size:11px; font-weight:bold;">كلمة المرور:</label>
           <input type="password" id="authPasswordInput" value="••••••••" placeholder="كلمة المرور" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; margin-top:3px; margin-bottom:14px; font-size:13px; font-family:inherit; background:var(--bg); color:var(--text);">
 
           <div style="display:flex; gap:8px;">
             <button class="btn-primary" onclick="submitAuth()" id="btnAuthSubmit" style="flex:2;">
               <span id="btnAuthSubmitLabel">تسجيل الدخول</span>
             </button>
-            <button class="btn-outline" onclick="demoQuickLogin()" title="دخول تجريبي بنقرة واحدة" style="flex:1;">
+            <button id="btnQuickDemoLogin" class="btn-outline" onclick="demoQuickLogin()" title="دخول تجريبي بنقرة واحدة" style="flex:1;">
               ⚡ دخول سريع
             </button>
           </div>
@@ -922,25 +929,25 @@
           <div style="background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:12px; margin-bottom:12px; font-size:12px; display:flex; justify-content:space-around; text-align:center;">
             <div>
               <div style="font-size:16px; font-weight:bold; color:var(--primary);">48</div>
-              <div style="color:var(--text-muted);">نصوص مدققة</div>
+              <div id="statCheckedTextsLbl" style="color:var(--text-muted);">نصوص مدققة</div>
             </div>
             <div style="border-left:1px solid var(--border);"></div>
             <div>
               <div style="font-size:16px; font-weight:bold; color:var(--secondary);">12,450</div>
-              <div style="color:var(--text-muted);">كلمة مفحوصة</div>
+              <div id="statWordsAnalyzedLbl" style="color:var(--text-muted);">كلمة مفحوصة</div>
             </div>
             <div style="border-left:1px solid var(--border);"></div>
             <div>
               <div style="font-size:16px; font-weight:bold; color:var(--success);">99.4%</div>
-              <div style="color:var(--text-muted);">دقة التدقيق</div>
+              <div id="statAccuracyLbl" style="color:var(--text-muted);">دقة التدقيق</div>
             </div>
           </div>
 
           <div style="display:flex; gap:8px;">
-            <button class="btn-secondary" onclick="switchNav('Pricing')" style="flex:1;">
+            <button id="btnProfileManagePlan" class="btn-secondary" onclick="switchNav('Pricing')" style="flex:1;">
               💳 إدارة الخطة
             </button>
-            <button class="btn-outline" onclick="logoutUser()" style="flex:1; color:var(--error); border-color:rgba(220,38,38,0.3);">
+            <button id="btnProfileLogout" class="btn-outline" onclick="logoutUser()" style="flex:1; color:var(--error); border-color:rgba(220,38,38,0.3);">
               تسجيل الخروج
             </button>
           </div>
@@ -949,17 +956,17 @@
 
       <!-- TERMS VIEW -->
       <div id="viewTerms" class="view-container">
-        <h3 style="margin-bottom: 8px;">الشروط والخصوصية</h3>
+        <h3 id="termsTitle" style="margin-bottom: 8px;">الشروط والخصوصية</h3>
         <div class="editor-card" style="font-size:13px; line-height:1.7;">
-          <p><strong>🔒 حماية الخصوصية:</strong> جميع النصوص تفحص محلياً على جهازك ويتم حفظ السجل في قاعدة بيانات Room المشفرة لضمان الخصوصية التامة.</p>
-          <p style="margin-top:8px;"><strong>⚖️ الملكية الفكرية:</strong> جميع حقوق النصوص المحررة والمدققة تعود ملكيتها الخالصة للمستخدم دون أي احتفاظ من المنصة.</p>
-          <p style="margin-top:8px;"><strong>🌐 سياسة الذكاء الاصطناعي:</strong> محرك التوليد وإعادة الصياغة يلتزم بأعلى معايير الأمانة اللغوية والأخلاقية.</p>
+          <p id="termPrivacyText"><strong>🔒 حماية الخصوصية:</strong> جميع النصوص تفحص محلياً على جهازك ويتم حفظ السجل في قاعدة بيانات Room المشفرة لضمان الخصوصية التامة.</p>
+          <p id="termIpText" style="margin-top:8px;"><strong>⚖️ الملكية الفكرية:</strong> جميع حقوق النصوص المحررة والمدققة تعود ملكيتها الخالصة للمستخدم دون أي احتفاظ من المنصة.</p>
+          <p id="termAiText" style="margin-top:8px;"><strong>🌐 سياسة الذكاء الاصطناعي:</strong> محرك التوليد وإعادة الصياغة يلتزم بأعلى معايير الأمانة اللغوية والأخلاقية.</p>
           
           <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
             <button class="btn-primary" onclick="acceptTerms()" id="btnAcceptTerms">
               <span id="acceptTermsIcon">✓</span> <span id="btnAcceptTermsLabel">أوافق على كافة الشروط والخصوصية</span>
             </button>
-            <button class="btn-outline" onclick="printOrExportTerms()">
+            <button id="btnPrintTermsBtn" class="btn-outline" onclick="printOrExportTerms()">
               📄 طباعة الشروط
             </button>
           </div>
@@ -1029,6 +1036,7 @@
       }, 3200);
     }
 
+    // ARABIC EXAMPLES (Must strictly remain in Arabic as linguistic examples)
     const samples = [
       "ذهب محمد الى المدرسة، و هو يحمل كتبه وشاهد عصفورا جميلا.",
       "إن المعلمة يساعد الطلاب في فهم الدرس بكل عناية.",
@@ -1043,96 +1051,99 @@
 
       // 1. Hamza rules
       const hamza = {
-        'الى': ['إلى', 'حرف جر يبدأ بهمزة قطع مكسورة'],
-        'ان': ['إنّ', 'حرف ناسخ يبدأ بهمزة قطع مكسورة مشددة النون'],
-        'او': ['أو', 'حرف عطف يبدأ بهمزة قطع مفتوحة'],
-        'اذا': ['إذا', 'ظرف يبدأ بهمزة قطع مكسورة'],
-        'الا': ['إلا', 'أداة استثناء تبدأ بهمزة قطع مكسورة'],
-        'اما': ['أما', 'حرف تفصيل يبدأ بهمزة قطع مفتوحة'],
-        'اين': ['أين', 'اسم استفهام يبدأ بهمزة قطع مفتوحة'],
-        'انت': ['أنتَ', 'ضمير مخاطب يبدأ بهمزة قطع مفتوحة'],
-        'انتم': ['أنتم', 'ضمير مخاطب للجمع يبدأ بهمزة قطع'],
-        'انا': ['أنا', 'ضمير متكلم مفرد يبدأ بهمزة قطع مفتوحة'],
-        'اخذ': ['أخذ', 'فعل ماض ثلاثي مهموز يبدأ بهمزة قطع'],
-        'اكل': ['أكل', 'فعل ماض ثلاثي مهموز يبدأ بهمزة قطع'],
-        'احمد': ['أحمد', 'اسم علم وزنه أفعل يبدأ بهمزة قطع'],
-        'اعلان': ['إعلان', 'مصدر الفعل الرباعي أعلن همزته قطع مكسورة'],
-        'اصدار': ['إصدار', 'مصدر الفعل الرباعي همزته قطع'],
-        'انجاز': ['إنجاز', 'مصدر الفعل الرباعي همزته قطع'],
-        'انتاج': ['إنتاج', 'مصدر رباعي همزته قطع'],
-        'اكرام': ['إكرام', 'مصدر رباعي همزته قطع مكسورة'],
-        'احسان': ['إحسان', 'مصدر رباعي همزته قطع مكسورة'],
-        'اكثر': ['أكثر', 'اسم تفضيل همزته قطع'],
-        'اكبر': ['أكبر', 'اسم تفضيل همزته قطع'],
-        'اصغر': ['أصغر', 'اسم تفضيل همزته قطع'],
-        'افضل': ['أفضل', 'اسم تفضيل همزته قطع'],
-        'احسن': ['أحسن', 'اسم تفضيل همزته قطع'],
-        'اقل': ['أقل', 'اسم تفضيل همزته قطع'],
-        'اجمل': ['أجمل', 'اسم تفضيل همزته قطع'],
-        'اول': ['أول', 'اسم همزته قطع'],
-        'اخر': ['آخر', 'اسم يبدأ بمدّة'],
-        'اهم': ['أهم', 'اسم تفضيل همزته قطع'],
-        'اصبح': ['أصبح', 'فعل ماض ناسخ همزته قطع'],
-        'اراد': ['أراد', 'فعل رباعي همزته قطع'],
-        'ادارة': ['إدارة', 'مصدر رباعي همزته قطع'],
-        'اعادة': ['إعادة', 'مصدر رباعي همزته قطع'],
-        'اضافة': ['إضافة', 'مصدر رباعي همزته قطع'],
-        'اكد': ['أكد', 'فعل ماض همزته قطع'],
-        'اشار': ['أشار', 'فعل ماض همزته قطع'],
-        'اوضح': ['أوضح', 'فعل ماض همزته قطع'],
-        'اعلن': ['أعلن', 'فعل ماض همزته قطع'],
-        'اطفال': ['أطفال', 'جمع تكسير همزته قطع'],
-        'اسماء': ['أسماء', 'جمع تكسير همزته قطع'],
-        'ارقام': ['أرقام', 'جمع تكسير همزته قطع'],
-        'ايام': ['أيام', 'جمع تكسير همزته قطع'],
-        'امور': ['أمور', 'جمع تكسير همزته قطع'],
-        'اعمال': ['أعمال', 'جمع تكسير همزته قطع'],
-        'اهداف': ['أهداف', 'جمع تكسير همزته قطع'],
-        'افكار': ['أفكار', 'جمع تكسير همزته قطع'],
-        'انواع': ['أنواع', 'جمع تكسير همزته قطع'],
-        'اشخاص': ['أشخاص', 'جمع تكسير همزته قطع'],
-        'اشياء': ['أشياء', 'جمع تكسير همزته قطع'],
-        'إسم': ['اسم', 'من الأسماء العشرة السماعية همزتها همزة وصل'],
-        'إبن': ['ابن', 'همزة وصل سماعية تسقط نطقا ووصلا'],
-        'إبنة': ['ابنة', 'همزة وصل سماعية تسقط وصلا']
+        'الى': ['إلى', 'حرف جر يبدأ بهمزة قطع مكسورة', 'Preposition that starts with a hamzat qat' under the alif'],
+        'ان': ['إنّ', 'حرف ناسخ يبدأ بهمزة قطع مكسورة مشددة النون', 'Accusative particle (Inna) starting with hamzat qat' and doubled nun'],
+        'او': ['أو', 'حرف عطف يبدأ بهمزة قطع مفتوحة', 'Conjunction particle starting with open hamzat qat''],
+        'اذا': ['إذا', 'ظرف يبدأ بهمزة قطع مكسورة', 'Conditional adverb starting with hamzat qat''],
+        'الا': ['إلا', 'أداة استثناء تبدأ بهمزة قطع مكسورة', 'Exceptive particle starting with hamzat qat''],
+        'اما': ['أما', 'حرف تفصيل يبدأ بهمزة قطع مفتوحة', 'Explicative particle starting with open hamzat qat''],
+        'اين': ['أين', 'اسم استفهام يبدأ بهمزة قطع مفتوحة', 'Interrogative noun starting with open hamzat qat''],
+        'انت': ['أنتَ', 'ضمير مخاطب يبدأ بهمزة قطع مفتوحة', 'Second-person pronoun starting with open hamzat qat''],
+        'انتم': ['أنتم', 'ضمير مخاطب للجمع يبدأ بهمزة قطع', 'Plural second-person pronoun starting with hamzat qat''],
+        'انا': ['أنا', 'ضمير متكلم مفرد يبدأ بهمزة قطع مفتوحة', 'First-person singular pronoun starting with open hamzat qat''],
+        'اخذ': ['أخذ', 'فعل ماض ثلاثي مهموز يبدأ بهمزة قطع', 'Trilateral past verb starting with hamzat qat''],
+        'اكل': ['أكل', 'فعل ماض ثلاثي مهموز يبدأ بهمزة قطع', 'Trilateral past verb starting with hamzat qat''],
+        'احمد': ['أحمد', 'اسم علم وزنه أفعل يبدأ بهمزة قطع', 'Proper noun on the weight of Af'al with hamzat qat''],
+        'اعلان': ['إعلان', 'مصدر الفعل الرباعي أعلن همزته قطع مكسورة', 'Verbal noun of form IV with hamzat qat''],
+        'اصدار': ['إصدار', 'مصدر الفعل الرباعي همزته قطع', 'Verbal noun of form IV with hamzat qat''],
+        'انجاز': ['إنجاز', 'مصدر الفعل الرباعي همزته قطع', 'Verbal noun of form IV with hamzat qat''],
+        'انتاج': ['إنتاج', 'مصدر رباعي همزته قطع', 'Verbal noun of form IV with hamzat qat''],
+        'اكرام': ['إكرام', 'مصدر رباعي همزته قطع مكسورة', 'Verbal noun of form IV with hamzat qat''],
+        'احسان': ['إحسان', 'مصدر رباعي همزته قطع مكسورة', 'Verbal noun of form IV with hamzat qat''],
+        'اكثر': ['أكثر', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
+        'اكبر': ['أكبر', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
+        'اصغر': ['أصغر', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
+        'افضل': ['أفضل', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
+        'احسن': ['أحسن', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
+        'اقل': ['أقل', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
+        'اجمل': ['أجمل', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
+        'اول': ['أول', 'اسم همزته قطع', 'Noun starting with hamzat qat''],
+        'اخر': ['آخر', 'اسم يبدأ بمدّة', 'Noun starting with madda (long alif)'],
+        'اهم': ['أهم', 'اسم تفضيل همزته قطع', 'Superlative noun starting with hamzat qat''],
+        'اصبح': ['أصبح', 'فعل ماض ناسخ همزته قطع', 'Incomplete past verb starting with hamzat qat''],
+        'اراد': ['أراد', 'فعل رباعي همزته قطع', 'Form IV past verb with hamzat qat''],
+        'ادارة': ['إدارة', 'مصدر رباعي همزته قطع', 'Form IV verbal noun with hamzat qat''],
+        'اعادة': ['إعادة', 'مصدر رباعي همزته قطع', 'Form IV verbal noun with hamzat qat''],
+        'اضافة': ['إضافة', 'مصدر رباعي همزته قطع', 'Form IV verbal noun with hamzat qat''],
+        'اكد': ['أكد', 'فعل ماض همزته قطع', 'Past verb starting with hamzat qat''],
+        'اشار': ['أشار', 'فعل ماض همزته قطع', 'Form IV past verb with hamzat qat''],
+        'اوضح': ['أوضح', 'فعل ماض همزته قطع', 'Form IV past verb with hamzat qat''],
+        'اعلن': ['أعلن', 'فعل ماض همزته قطع', 'Form IV past verb with hamzat qat''],
+        'اطفال': ['أطفال', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
+        'اسماء': ['أسماء', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
+        'ارقام': ['أرقام', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
+        'ايام': ['أيام', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
+        'امور': ['أمور', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
+        'اعمال': ['أعمال', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
+        'اهداف': ['أهداف', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
+        'افكار': ['أفكار', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
+        'انواع': ['أنواع', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
+        'اشخاص': ['أشخاص', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
+        'اشياء': ['أشياء', 'جمع تكسير همزته قطع', 'Broken plural starting with hamzat qat''],
+        'إسم': ['اسم', 'من الأسماء العشرة السماعية همزتها همزة وصل', 'One of the ten standard nouns that take hamzat wasl without hamza'],
+        'إبن': ['ابن', 'همزة وصل سماعية تسقط نطقا ووصلا', 'Standard noun taking hamzat wasl without written hamza'],
+        'إبنة': ['ابنة', 'همزة وصل سماعية تسقط وصلا', 'Standard noun taking hamzat wasl without written hamza']
       };
-      for (const [w, [rep, exp]] of Object.entries(hamza)) {
+      for (const [w, [rep, expAr, expEn]] of Object.entries(hamza)) {
         const regex = new RegExp('(^|\\s)' + w + '(?=$|\\s|[,،.!?؟؛])', 'g');
         let match;
         while ((match = regex.exec(text)) !== null) {
           issues.push({
             orig: w,
-            sugg: rep,
+            sugg: rep, // Example stays in Arabic
             cat: 'spelling',
-            badge: 'همزة وإملاء',
-            issue: "خطأ في رسم همزة القطع/الوصل في كلمة '" + w + "'",
-            exp: exp
+            badgeAr: 'همزة وإملاء',
+            badgeEn: 'Spelling & Hamza',
+            issueAr: "خطأ في رسم همزة القطع/الوصل في كلمة '" + w + "'",
+            issueEn: "Orthographic hamza error in word '" + w + "'",
+            expAr: expAr,
+            expEn: expEn
           });
         }
       }
 
       // 2. Ta' Marbuta vs Ha'
       const taMarbuta = {
-        'مدرسه': ['مدرسة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة'],
-        'جامعه': ['جامعة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة'],
-        'حديقه': ['حديقة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة'],
-        'مدينه': ['مدينة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة'],
-        'جميله': ['جميلة', 'صفة مؤنثة تنتهي بتاء مربوطة منقوطة'],
-        'كبيره': ['كبيرة', 'صفة مؤنثة تنتهي بتاء مربوطة منقوطة'],
-        'صغيره': ['صغيرة', 'صفة مؤنثة تنتهي بتاء مربوطة منقوطة'],
-        'لغه': ['لغة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة'],
-        'عربيه': ['عربية', 'صفة مؤنثة تنتهي بتاء مربوطة منقوطة'],
-        'حياه': ['حياة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة'],
-        'صلاه': ['صلاة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة'],
-        'هذة': ['هذه', 'اسم إشارة ينتهي بهاء غير منقوطة'],
-        'علية': ['عليه', 'شبه جملة تنتهي بهاء الضمير غير المنقوطة'],
-        'الية': ['إليه', 'شبه جملة تنتهي بهاء الضمير'],
-        'منة': ['منه', 'حرف جر وضمير ينتهي بهاء الغائب'],
-        'فية': ['فيه', 'حرف جر وضمير ينتهي بهاء الغائب'],
-        'عنة': ['عنه', 'حرف جر وضمير ينتهي بهاء الغائب'],
-        'وجة': ['وجه', 'اسم مذكر ينتهي بهاء أصلية']
+        'مدرسه': ['مدرسة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة', 'Feminine noun ending in dotted taa marbuta'],
+        'جامعه': ['جامعة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة', 'Feminine noun ending in dotted taa marbuta'],
+        'حديقه': ['حديقة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة', 'Feminine noun ending in dotted taa marbuta'],
+        'مدينه': ['مدينة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة', 'Feminine noun ending in dotted taa marbuta'],
+        'جميله': ['جميلة', 'صفة مؤنثة تنتهي بتاء مربوطة منقوطة', 'Feminine adjective ending in dotted taa marbuta'],
+        'كبيره': ['كبيرة', 'صفة مؤنثة تنتهي بتاء مربوطة منقوطة', 'Feminine adjective ending in dotted taa marbuta'],
+        'صغيره': ['صغيرة', 'صفة مؤنثة تنتهي بتاء مربوطة منقوطة', 'Feminine adjective ending in dotted taa marbuta'],
+        'لغه': ['لغة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة', 'Feminine noun ending in dotted taa marbuta'],
+        'عربيه': ['عربية', 'صفة مؤنثة تنتهي بتاء مربوطة منقوطة', 'Feminine adjective ending in dotted taa marbuta'],
+        'حياه': ['حياة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة', 'Feminine noun ending in dotted taa marbuta'],
+        'صلاه': ['صلاة', 'اسم مؤنث ينتهي بتاء مربوطة منقوطة', 'Feminine noun ending in dotted taa marbuta'],
+        'هذة': ['هذه', 'اسم إشارة ينتهي بهاء غير منقوطة', 'Demonstrative pronoun ending in undotted haa'],
+        'علية': ['عليه', 'شبه جملة تنتهي بهاء الضمير غير المنقوطة', 'Preposition and third-person pronoun ending in haa'],
+        'الية': ['إليه', 'شبه جملة تنتهي بهاء الضمير', 'Preposition with hamza and pronoun ending in haa'],
+        'منة': ['منه', 'حرف جر وضمير ينتهي بهاء الغائب', 'Preposition and third-person pronoun ending in haa'],
+        'فية': ['فيه', 'حرف جر وضمير ينتهي بهاء الغائب', 'Preposition and third-person pronoun ending in haa'],
+        'عنة': ['عنه', 'حرف جر وضمير ينتهي بهاء الغائب', 'Preposition and third-person pronoun ending in haa'],
+        'وجة': ['وجه', 'اسم مذكر ينتهي بهاء أصلية', 'Masculine noun ending in root haa without dots']
       };
-      for (const [w, [rep, exp]] of Object.entries(taMarbuta)) {
+      for (const [w, [rep, expAr, expEn]] of Object.entries(taMarbuta)) {
         const regex = new RegExp('(^|\\s)' + w + '(?=$|\\s|[,،.!?؟؛])', 'g');
         let match;
         while ((match = regex.exec(text)) !== null) {
@@ -1140,21 +1151,25 @@
             orig: w,
             sugg: rep,
             cat: 'spelling',
-            badge: 'تاء مربوطة وهاء',
-            issue: "خلط بين التاء المربوطة والهاء في كلمة '" + w + "'",
-            exp: exp
+            badgeAr: 'تاء مربوطة وهاء',
+            badgeEn: 'Taa Marbuta & Haa',
+            issueAr: "خلط بين التاء المربوطة والهاء في كلمة '" + w + "'",
+            issueEn: "Confusion between Taa Marbuta and Haa in '" + w + "'",
+            expAr: expAr,
+            expEn: expEn
           });
         }
       }
 
       // 3. Ya vs Alif Maqsura
-      const yaFixes = {
-        'حتي': ['حتى', 'حرف غاية ينتهي بألف مقصورة'],
-        'فى': ['في', 'حرف جر ينتهي بياء منقوطة'],
-        'التى': ['التي', 'اسم موصول ينتهي بياء منقوطة'],
-        'الذى': ['الذي', 'اسم موصول ينتهي بياء منقوطة']
+      const alifMaqsura = {
+        'علي': ['على', 'حرف جر ينتهي بألف مقصورة وليس ياء', 'Preposition ending in alif maqsura (no dots)'],
+        'حتي': ['حتى', 'أداة غاية تنتهي بألف مقصورة', 'Particle ending in alif maqsura'],
+        'الي': ['إلى', 'حرف جر ينتهي بألف مقصورة مع همزة قطع', 'Preposition with hamzat qat' ending in alif maqsura'],
+        'بلي': ['بلى', 'حرف جواب ينتهي بألف مقصورة', 'Answer particle ending in alif maqsura'],
+        'لدي': ['لدى', 'ظرف ينتهي بألف مقصورة', 'Adverb ending in alif maqsura']
       };
-      for (const [w, [rep, exp]] of Object.entries(yaFixes)) {
+      for (const [w, [rep, expAr, expEn]] of Object.entries(alifMaqsura)) {
         const regex = new RegExp('(^|\\s)' + w + '(?=$|\\s|[,،.!?؟؛])', 'g');
         let match;
         while ((match = regex.exec(text)) !== null) {
@@ -1162,160 +1177,179 @@
             orig: w,
             sugg: rep,
             cat: 'spelling',
-            badge: 'ياء وألف مقصورة',
-            issue: "خطأ في رسم الياء أو الألف المقصورة في '" + w + "'",
-            exp: exp
+            badgeAr: 'ألف مقصورة وياء',
+            badgeEn: 'Alif Maqsura & Yaa',
+            issueAr: "رسم الياء مكان الألف المقصورة في '" + w + "'",
+            issueEn: "Using dotted Yaa instead of Alif Maqsura in '" + w + "'",
+            expAr: expAr,
+            expEn: expEn
           });
         }
       }
 
-      // 4. Tanween rules
-      const tanween = {
-        'عصفورا': ['عصفوراً', 'مفعول به منصوب بتنوين الفتح'],
-        'جميلا': ['جميلاً', 'نعت منصوب يتبع المنعوت بتنوين الفتح'],
-        'شكرا': ['شكراً', 'مفعول مطلق منصوب بتنوين الفتح'],
-        'جزءا': ['جزءاً', 'اسم منون بتنوين الفتح'],
-        'مساءا': ['مساءً', 'الهمزة المسبوقة بألف لا تلحقها ألف تنوين'],
-        'سواءا': ['سواءً', 'الهمزة المسبوقة بألف لا تلحقها ألف تنوين'],
-        'بناءا': ['بناءً', 'الهمزة المسبوقة بألف لا تلحقها ألف تنوين'],
-        'شفاءا': ['شفاءً', 'الهمزة المسبوقة بألف لا تلحقها ألف تنوين'],
-        'رجاءا': ['رجاءً', 'الهمزة المسبوقة بألف لا تلحقها ألف تنوين'],
-        'ايضا': ['أيضاً', 'مفعول مطلق منصوب بتنوين الفتح وهمزة قطع'],
-        'أيضا': ['أيضاً', 'مفعول مطلق منصوب بتنوين الفتح'],
-        'دائما': ['دائماً', 'حال أو ظرف منصوب بتنوين الفتح'],
-        'ابدا': ['أبداً', 'ظرف زمان منصوب بتنوين الفتح وهمزة قطع'],
-        'أبدا': ['أبداً', 'ظرف زمان منصوب بتنوين الفتح'],
-        'معا': ['معاً', 'حال منصوبة بتنوين الفتح'],
-        'صباحا': ['صباحاً', 'ظرف زمان منصوب بتنوين الفتح'],
-        'نهارا': ['نهاراً', 'ظرف زمان منصوب بتنوين الفتح'],
-        'ليلا': ['ليلاً', 'ظرف زمان منصوب بتنوين الفتح'],
-        'فعلا': ['فعلاً', 'مفعول مطلق منصوب بتنوين الفتح'],
-        'حقا': ['حقاً', 'مفعول مطلق منصوب بتنوين الفتح'],
-        'طبعا': ['طبعاً', 'مفعول مطلق منصوب بتنوين الفتح'],
-        'غالبا': ['غالباً', 'حال منصوبة بتنوين الفتح'],
-        'نادرا': ['نادراً', 'حال منصوبة بتنوين الفتح'],
-        'جدا': ['جداً', 'مفعول مطلق منصوب بتنوين الفتح'],
-        'اولا': ['أولاً', 'اسم منون بالفتح للترتيب'],
-        'أولا': ['أولاً', 'اسم منون بالفتح للترتيب'],
-        'ثانيا': ['ثانياً', 'اسم منون بالفتح للترتيب'],
-        'ثالثا': ['ثالثاً', 'اسم منون بالفتح للترتيب'],
-        'اخيرا': ['أخيراً', 'ظرف منون بالفتح للترتيب'],
-        'أخيرا': ['أخيراً', 'ظرف منون بالفتح للترتيب'],
-        'سابقا': ['سابقاً', 'ظرف منصوب بتنوين الفتح'],
-        'لاحقا': ['لاحقاً', 'ظرف منصوب بتنوين الفتح'],
-        'حاليا': ['حالياً', 'ظرف منصوب بتنوين الفتح'],
-        'مسبقا': ['مسبقاً', 'ظرف منصوب بتنوين الفتح'],
-        'عموما': ['عموماً', 'حال منصوبة بتنوين الفتح'],
-        'مثلا': ['مثلاً', 'مفعول مطلق منصوب بتنوين الفتح'],
-        'فورا': ['فوراً', 'حال منصوبة بتنوين الفتح'],
-        'مرحبا': ['مرحباً', 'مفعول به منصوب بتنوين الفتح'],
-        'اهلا': ['أهلاً', 'مفعول به منصوب بتنوين الفتح وهمزة قطع'],
-        'أهلا': ['أهلاً', 'مفعول به منصوب بتنوين الفتح'],
-        'سهلا': ['سهلاً', 'معطوف منصوب بتنوين الفتح'],
-        'جميعا': ['جميعاً', 'حال منصوبة بتنوين الفتح']
+      // 4. Conjunction Waw with space
+      const wawRegex = /(^|\s)و\s+([\u0600-\u06FF]+)/g;
+      let wawMatch;
+      while ((wawMatch = wawRegex.exec(text)) !== null) {
+        issues.push({
+          orig: 'و ' + wawMatch[2],
+          sugg: 'و' + wawMatch[2],
+          cat: 'punct',
+          badgeAr: 'واو العطف والمسافة',
+          badgeEn: 'Conjunction Waw Spacing',
+          issueAr: 'فصل واو العطف عن المعطوف بمسافة غير صحيحة',
+          issueEn: 'Conjunction Waw erroneously separated with space',
+          expAr: 'واو العطف تتصل مباشرة بالكلمة التي تليها دون مسافة فاصلة في العربية.',
+          expEn: 'The conjunction waw must attach directly to the subsequent word without space.'
+        });
+      }
+
+      // 5. English comma
+      if (text.includes(',')) {
+        issues.push({
+          orig: ',',
+          sugg: '،',
+          cat: 'punct',
+          badgeAr: 'فاصلة لاتينية',
+          badgeEn: 'Latin Comma',
+          issueAr: 'استخدام الفاصلة الإنجليزية (,) في نص عربي',
+          issueEn: 'Latin comma (,) used in Arabic text instead of Arabic comma (،)',
+          expAr: 'النص العربي يستخدم الفاصلة المعقوفة للأعلى (،) للفصل بين الجمل.',
+          expEn: 'Arabic text requires the inverted Arabic comma (،) to separate clauses.'
+        });
+      }
+
+      // 6. English Question mark
+      if (text.includes('?')) {
+        issues.push({
+          orig: '?',
+          sugg: '؟',
+          cat: 'punct',
+          badgeAr: 'علامة استفهام',
+          badgeEn: 'Question Mark',
+          issueAr: 'استخدام علامة الاستفهام الإنجليزية (?)',
+          issueEn: 'Latin question mark (?) used instead of Arabic question mark (؟)',
+          expAr: 'في اللغة العربية تتجه علامة الاستفهام نحو اليمين (؟).',
+          expEn: 'Arabic typography requires the reversed question mark (؟).'
+        });
+      }
+
+      // 7. Space before punctuation
+      const punctSpaceRegex = /\s+([،,.!?؟؛])/g;
+      let psMatch;
+      while ((psMatch = punctSpaceRegex.exec(text)) !== null) {
+        issues.push({
+          orig: psMatch[0],
+          sugg: psMatch[1],
+          cat: 'punct',
+          badgeAr: 'مسافة قبل الترقيم',
+          badgeEn: 'Punctuation Spacing',
+          issueAr: "وجود مسافة قبل علامة الترقيم '" + psMatch[1] + "'",
+          issueEn: "Spurious whitespace before punctuation mark '" + psMatch[1] + "'",
+          expAr: 'علامات الترقيم تلتصق دائماً بالكلمة التي قبلها وتليها مسافة.',
+          expEn: 'Punctuation marks must adhere directly to preceding words without space.'
+        });
+      }
+
+      // 8. Subject-Verb Agreement: المعلمة يساعد -> المعلمة تساعد
+      if (/المعلمة\s+يساعد/.test(text)) {
+        issues.push({
+          orig: 'المعلمة يساعد',
+          sugg: 'المعلمة تساعد',
+          cat: 'agreement',
+          badgeAr: 'توافق نحوي',
+          badgeEn: 'Grammar Agreement',
+          issueAr: 'تذكير الفعل مع الفاعل المؤنث',
+          issueEn: 'Masculine verb form used with feminine subject',
+          expAr: 'يجب تأنيث الفعل المضارع بتاء في أوله إذا كان الفاعل اسماً مؤنثاً حقيقياً.',
+          expEn: 'The present verb must start with a Taa prefix to agree with a feminine subject.'
+        });
+      }
+
+      // 9. Inna accusative noun agreement
+      if (/إن\s+المعلمون/.test(text) || /ان\s+المعلمون/.test(text)) {
+        issues.push({
+          orig: 'المعلمون',
+          sugg: 'المعلمين',
+          cat: 'grammar',
+          badgeAr: 'إعراب اسم إنّ',
+          badgeEn: 'Inna Subject Accusative',
+          issueAr: 'رفع اسم إنّ بالواو والصواب نصبه',
+          issueEn: 'Subject of Inna must be accusative (Mansub with Yaa, not Waw)',
+          expAr: 'اسم إنّ يكون منصوباً، وعلامة نصبه الياء في جمع المذكر السالم (إنّ المعلمين).',
+          expEn: 'The noun of Inna is accusative; for sound masculine plurals, accusative is marked with Yaa.'
+        });
+      }
+
+      // 10. Jussive verb form (Jazm)
+      if (/لم\s+يذهبون/.test(text)) {
+        issues.push({
+          orig: 'لم يذهبون',
+          sugg: 'لم يذهبوا',
+          cat: 'grammar',
+          badgeAr: 'جزم الأفعال الخمسة',
+          badgeEn: 'Jussive Five Verbs',
+          issueAr: 'ثبوت النون في الفعل المضارع بعد أداة الجزم (لم)',
+          issueEn: 'Nun retained after jussive particle (Lam); should be omitted',
+          expAr: 'الأفعال الخمسة تجزم بحذف النون بعد أدوات الجزم مثل لم ولما ولا الناهية.',
+          expEn: 'The five verbs are jussive with the omission of the final Nun after Lam.'
+        });
+      }
+
+      // 11. Defective verb jussive: لم ياتي -> لم يأتِ
+      if (/لم\s+ياتي/.test(text) || /لم\s+يأتي/.test(text)) {
+        issues.push({
+          orig: 'ياتي',
+          sugg: 'يأتِ',
+          cat: 'grammar',
+          badgeAr: 'جزم المعتل الآخر',
+          badgeEn: 'Jussive Defective Verb',
+          issueAr: 'عدم حذف حرف العلة في المضارع المجزوم',
+          issueEn: 'Weak final vowel not deleted in jussive defective verb',
+          expAr: 'الفعل المضارع معتل الآخر يجزم بحذف حرف العلة (لم يأتِ).',
+          expEn: 'Defective verbs are jussive by truncating the final weak letter.'
+        });
+      }
+
+      // 12. Tanween Al-Fath alif: عصفورا -> عصفوراً
+      const tanweenAccusative = {
+        'عصفورا': ['عصفوراً', 'تنوين الفتح يستوجب إضافة ألف التنوين مع فتحتين', 'Accusative tanween requires alif with double fatha'],
+        'جميلا': ['جميلاً', 'صفة منصوبة بتنوين الفتح مع ألف التنوين', 'Accusative adjective requiring tanween al-fath with alif'],
+        'شكرا': ['شكراً', 'مفعول مطلق منصوب بتنوين الفتح', 'Cognate accusative noun requiring tanween al-fath'],
+        'اهلا': ['أهلاً', 'منصوب على إضمار فعل مع تنوين الفتح والهمزة', 'Accusative noun requiring hamzat qat' and tanween'],
+        'سهلا': ['سهلاً', 'معطوف منصوب بتنوين الفتح وألف النصب', 'Accusative noun requiring tanween al-fath'],
+        'مساءا': ['مساءً', 'لا تضاف ألف التنوين بعد همزة متطرفة مسبوقة بألف', 'No additional alif added after a hamza preceded by alif']
       };
-      for (const [w, [rep, exp]] of Object.entries(tanween)) {
+      for (const [w, [rep, expAr, expEn]] of Object.entries(tanweenAccusative)) {
         const regex = new RegExp('(^|\\s)' + w + '(?=$|\\s|[,،.!?؟؛])', 'g');
         let match;
         while ((match = regex.exec(text)) !== null) {
           issues.push({
             orig: w,
             sugg: rep,
-            cat: 'grammar',
-            badge: 'تنوين ونحو',
-            issue: "إهمال رسم تنوين النصب على '" + w + "'",
-            exp: exp
+            cat: 'tanween',
+            badgeAr: 'تنوين ونصب',
+            badgeEn: 'Tanween & Case',
+            issueAr: "ضبط تنوين الفتح في كلمة '" + w + "'",
+            issueEn: "Orthographic adjustment for Tanween Al-Fath in '" + w + "'",
+            expAr: expAr,
+            expEn: expEn
           });
         }
       }
 
-      // 5. Syntactic and agreement rules
-      const agreements = [
-        ['المعلمة يساعد', 'المعلمةُ تُساعدُ', 'عدم مطابقة الفعل المضارع للفاعل المؤنث', 'يجب تأنيث الفعل المضارع بتاء التأنيث لتطابقه مع الفاعل المؤنث.'],
-        ['إن المعلمة يساعد', 'إنّ المعلمةَ تُساعدُ', 'مطابقة الفعل واسم إن المنصوب', 'اسم إن منصوب بالفتحة ومطابقة الفعل المضارع بالتاء.'],
-        ['ان المعلمة يساعد', 'إنّ المعلمةَ تُساعدُ', 'مطابقة الفعل واسم إن المنصوب', 'اسم إن منصوب بالفتحة ومطابقة الفعل المضارع بالتاء.'],
-        ['البنت ذهب', 'البنت ذهبت', 'تأنيث الفعل الماضي', 'الفاعل مؤنث حقيقي فيلزم تاء التأنيث الساكنة في الفعل الماضي.'],
-        ['الطلاب يفهم', 'الطلاب يفهمون', 'مطابقة الفعل للجمع', 'الفعل المسند لواو الجماعة يرفع بثبوت النون.'],
-        ['في الحديقةُ', 'في الحديقةِ', 'خطأ في ضبط الاسم المجرور', 'الاسم بعد حرف الجر (في) يكون مجروراً وعلامة جره الكسرة.'],
-        ['إن المعلمون', 'إنّ المعلمين', 'اسم إن منصوب', 'اسم إن منصوب وعلامة نصبه الياء لأنه جمع مذكر سالم.'],
-        ['ان المعلمون', 'إنّ المعلمين', 'اسم إن منصوب', 'اسم إن منصوب وعلامة نصبه الياء لأنه جمع مذكر سالم.'],
-        ['كانوا مسافرون', 'كانوا مسافرين', 'خبر كان منصوب', 'خبر كان منصوب وعلامة نصبه الياء لأنه جمع مذكر سالم.'],
-        ['لم يذهبون', 'لم يذهبوا', 'جزم الأفعال الخمسة', 'فعل مضارع مجزوم بلم بحذف النون وتزاد ألف التفريق.'],
-        ['لن يذهبون', 'لن يذهبوا', 'نصب الأفعال الخمسة', 'فعل مضارع منصوب بلن بحذف النون وتزاد ألف التفريق.'],
-        ['لم ياتي', 'لم يأتِ', 'جزم الفعل المعتل الآخر', 'فعل مضارع مجزوم بحذف حرف العلة والتعويض بالكسرة.'],
-        ['لم يأتي', 'لم يأتِ', 'جزم الفعل المعتل الآخر', 'فعل مضارع مجزوم بحذف حرف العلة والتعويض بالكسرة.'],
-        ['لا تنسى', 'لا تنسَ', 'جزم الفعل المعتل الآخر', 'فعل مضارع مجزوم بلا الناهية بحذف حرف العلة.'],
-        ['ذهب محمد الى المدرسة', 'ذهب محمدٌ إلى المدرسةِ', 'إعراب الفاعل والمجرور', 'فاعل مرفوع بالضمة ومجرور بحرف الجر بالكسرة.'],
-        ['ذهب محمد إلى المدرسة', 'ذهب محمدٌ إلى المدرسةِ', 'إعراب الفاعل والمجرور', 'فاعل مرفوع بالضمة ومجرور بحرف الجر بالكسرة.']
-      ];
-      for (const [orig, sugg, issue, exp] of agreements) {
-        if (text.includes(orig)) {
-          issues.push({
-            orig: orig,
-            sugg: sugg,
-            cat: 'agreement',
-            badge: 'توافق نحوي',
-            issue: issue,
-            exp: exp
-          });
-        }
-      }
-
-      // 6. Conjunction Waw
-      const wawRegex = /(^|\s)و\s+([\u0600-\u06FF]+)/g;
-      let wawMatch;
-      while ((wawMatch = wawRegex.exec(text)) !== null) {
-        const full = wawMatch[0].trim();
-        const word = wawMatch[2];
+      // 13. Preposition genitive: في الحديقةُ -> في الحديقةِ
+      if (/في\s+الحديقةُ/.test(text)) {
         issues.push({
-          orig: full,
-          sugg: 'و' + word,
-          cat: 'punct',
-          badge: 'ترقيم وعطف',
-          issue: "فصل واو العطف عن المعطوف '" + word + "'",
-          exp: "واو العطف حرف أحادي يلتصق رسماً بالكلمة التي تليه دون مسافة."
-        });
-      }
-
-      // 7. Punctuation rules
-      if (text.includes(',')) {
-        issues.push({
-          orig: ',',
-          sugg: '،',
-          cat: 'punct',
-          badge: 'ترقيم',
-          issue: 'استخدام الفاصلة اللاتينية بدلاً من العربية (،)',
-          exp: 'في اللغة العربية تُستخدم الفاصلة المقلوبة لأعلى (،).'
-        });
-      }
-      if (text.includes('?')) {
-        issues.push({
-          orig: '?',
-          sugg: '؟',
-          cat: 'punct',
-          badge: 'ترقيم',
-          issue: 'استخدام علامة الاستفهام اللاتينية (?)',
-          exp: 'علامة الاستفهام العربية تنعكس يمنة لتلائم اتجاه الكتابة (؟).'
-        });
-      }
-      if (text.includes(';')) {
-        issues.push({
-          orig: ';',
-          sugg: '؛',
-          cat: 'punct',
-          badge: 'ترقيم',
-          issue: 'استخدام الفاصلة المنقوطة اللاتينية (;)',
-          exp: 'تُستخدم الفاصلة المنقوطة العربية (؛) بين الجملتين السببيتين.'
-        });
-      }
-      if (/\\s+([،,.!?؟؛])/.test(text)) {
-        issues.push({
-          orig: ' مسافة قبل علامة الترقيم',
-          sugg: 'بدون مسافة',
-          cat: 'punct',
-          badge: 'ترقيم',
-          issue: 'فراغ غير صحيح قبل علامة الترقيم',
-          exp: 'علامات الترقيم العربية تلتصق بالكلمة التي قبلها مباشرة.'
+          orig: 'في الحديقةُ',
+          sugg: 'في الحديقةِ',
+          cat: 'grammar',
+          badgeAr: 'حرف جر ومجرور',
+          badgeEn: 'Genitive Case',
+          issueAr: 'ضم الاسم بعد حرف الجر (في) والصواب جره بالكسرة',
+          issueEn: 'Noun following preposition (Fi) erroneously nominative; must be genitive with kasra',
+          expAr: 'الاسم المسبوق بحرف جر يكون مجروراً وعلامة جره الكسرة الظاهرة.',
+          expEn: 'Nouns preceded by prepositions are in the genitive case marked by a kasra.'
         });
       }
 
@@ -1341,17 +1375,74 @@
       }
     }
 
+    // Dynamic Character Count, Reading Time, and Complexity Feedback
     function runCheck(showUserToast = false) {
       if (isProcessingText) return;
       const text = document.getElementById('textInput').value;
-      const words = text.trim() ? text.trim().split(/\\s+/).length : 0;
-      document.getElementById('statWords').innerText = words + (currentLang === 'ar' ? ' كلمات' : ' words');
-      document.getElementById('statChars').innerText = text.length + (currentLang === 'ar' ? ' أحرف' : ' chars');
+      const trimmed = text.trim();
+      const words = trimmed ? trimmed.split(/\s+/).length : 0;
+      const charsWithSpaces = text.length;
+      const charsWithoutSpaces = text.replace(/\s+/g, '').length;
+
+      // Reading time calculation (Standard Arabic reading rate ~160 words/min)
+      const wpm = 160;
+      const readingMinutes = Math.ceil(words / wpm);
+      const readingSeconds = Math.round((words / wpm) * 60);
+
+      let readingTimeStr = '';
+      if (currentLang === 'ar') {
+        if (words === 0) readingTimeStr = '⏱️ وقت القراءة: 0 دقيقة';
+        else if (readingSeconds < 45) readingTimeStr = '⏱️ وقت القراءة: أقل من دقيقة';
+        else readingTimeStr = '⏱️ وقت القراءة: حوالي ' + readingMinutes + ' دقيقة';
+      } else {
+        if (words === 0) readingTimeStr = '⏱️ Reading time: 0 min';
+        else if (readingSeconds < 45) readingTimeStr = '⏱️ Reading time: < 1 min';
+        else readingTimeStr = '⏱️ Reading time: ~' + readingMinutes + ' min';
+      }
+
+      // Text Complexity Level
+      let complexityLevel = 'simple';
+      if (words > 0) {
+        const avgWordLen = charsWithoutSpaces / words;
+        const sentences = text.split(/[.!؟!
+]+/).filter(s => s.trim().length > 0).length || 1;
+        const wordsPerSentence = words / sentences;
+        if (avgWordLen > 5.5 || wordsPerSentence > 18) complexityLevel = 'complex';
+        else if (avgWordLen > 4.5 || wordsPerSentence > 10) complexityLevel = 'moderate';
+      }
+
+      let complexityStr = '';
+      if (currentLang === 'ar') {
+        const labels = { simple: 'بسيط', moderate: 'متوسط', complex: 'متقدم' };
+        complexityStr = 'مستوى النص: ' + labels[complexityLevel];
+      } else {
+        const labels = { simple: 'Simple', moderate: 'Moderate', complex: 'Complex' };
+        complexityStr = 'Complexity: ' + labels[complexityLevel];
+      }
+
+      const statWords = document.getElementById('statWords');
+      if (statWords) statWords.innerText = words + (currentLang === 'ar' ? ' كلمات' : ' words');
+      
+      const statChars = document.getElementById('statChars');
+      if (statChars) {
+        statChars.innerText = currentLang === 'ar'
+          ? (charsWithSpaces + ' أحرف (' + charsWithoutSpaces + ' بدون مسافات)')
+          : (charsWithSpaces + ' chars (' + charsWithoutSpaces + ' no spaces)');
+      }
+
+      const statReadingTime = document.getElementById('statReadingTime');
+      if (statReadingTime) statReadingTime.innerText = readingTimeStr;
+
+      const statComplexity = document.getElementById('statComplexity');
+      if (statComplexity) statComplexity.innerText = complexityStr;
 
       // If user clicked check or text is non-empty, play smooth animated indicator
       if (showUserToast && text.trim().length > 0) {
         isProcessingText = true;
-        showProcessingIndicator('جارٍ تدقيق النص واكتشاف الأخطاء النحوية والإملائية', 'Auditing grammar and orthography');
+        showProcessingIndicator(
+          'جارٍ تدقيق النص واكتشاف الأخطاء النحوية والإملائية',
+          'Auditing grammar and orthography'
+        );
         const btnCheck = document.getElementById('btnCheck');
         if (btnCheck) {
           btnCheck.disabled = true;
@@ -1366,7 +1457,7 @@
             btnCheck.style.opacity = '1';
           }
           executeCheckAnalysis(text, showUserToast);
-        }, 500);
+        }, 400);
       } else {
         executeCheckAnalysis(text, showUserToast);
       }
@@ -1374,7 +1465,10 @@
 
     function executeCheckAnalysis(text, showUserToast) {
       currentIssues = analyze(text);
-      document.getElementById('statIssues').innerText = currentIssues.length + (currentLang === 'ar' ? ' ملاحظات' : ' issues');
+      const statIssues = document.getElementById('statIssues');
+      if (statIssues) {
+        statIssues.innerText = currentIssues.length + (currentLang === 'ar' ? ' ملاحظات' : ' issues');
+      }
       
       const badgeEl = document.getElementById('issuesCountBadge');
       if (badgeEl) {
@@ -1382,22 +1476,26 @@
       }
 
       const container = document.getElementById('issuesList');
+      if (!container) return;
       container.innerHTML = '';
 
       if (currentIssues.length === 0) {
         container.innerHTML = '<span style="color:var(--success); font-size:13px; font-weight:bold; padding:6px 0;">' + 
           (currentLang === 'ar' ? '✓ النص سليم وخالٍ من الأخطاء النحوية والإملائية!' : '✓ Text is pristine and error-free!') + '</span>';
-        document.getElementById('inspector').style.display = 'none';
+        const inspector = document.getElementById('inspector');
+        if (inspector) inspector.style.display = 'none';
         if (showUserToast) {
           showToast(currentLang === 'ar' ? '✓ النص سليم 100% وخالٍ من الأخطاء' : '✓ Text is completely error-free!', 'success');
         }
         return;
       }
 
-      document.getElementById('inspector').style.display = 'block';
+      const inspector = document.getElementById('inspector');
+      if (inspector) inspector.style.display = 'block';
       currentIssues.forEach((item, idx) => {
         const btn = document.createElement('button');
         btn.className = 'chip' + (idx === 0 ? ' active' : '');
+        // Linguistic example stays in Arabic!
         btn.innerHTML = '<span style="color:var(--error); font-weight:bold;">' + item.orig + '</span> ➔ <span style="color:var(--primary); font-weight:bold;">' + item.sugg + '</span>';
         btn.onclick = () => selectIssue(idx);
         container.appendChild(btn);
@@ -1409,7 +1507,6 @@
       }
     }
 
-    // Required updateStats helper called from dictation
     function updateStats() {
       runCheck(false);
     }
@@ -1424,11 +1521,23 @@
       });
 
       if (activeIssue) {
-        document.getElementById('inspBadge').innerText = activeIssue.badge;
-        document.getElementById('inspBadge').className = 'badge ' + activeIssue.cat;
-        document.getElementById('inspIssueText').innerText = activeIssue.issue;
-        document.getElementById('inspSuggText').innerText = activeIssue.sugg;
-        document.getElementById('inspExplanation').innerText = activeIssue.exp;
+        const inspBadge = document.getElementById('inspBadge');
+        if (inspBadge) {
+          inspBadge.innerText = currentLang === 'ar' ? activeIssue.badgeAr : activeIssue.badgeEn;
+          inspBadge.className = 'badge ' + activeIssue.cat;
+        }
+        const inspIssue = document.getElementById('inspIssueText');
+        if (inspIssue) {
+          inspIssue.innerText = currentLang === 'ar' ? activeIssue.issueAr : activeIssue.issueEn;
+        }
+        const inspSugg = document.getElementById('inspSuggText');
+        if (inspSugg) {
+          inspSugg.innerText = activeIssue.sugg; // Arabic example remains in Arabic!
+        }
+        const inspExp = document.getElementById('inspExplanation');
+        if (inspExp) {
+          inspExp.innerText = currentLang === 'ar' ? activeIssue.expAr : activeIssue.expEn;
+        }
       }
     }
 
@@ -1473,71 +1582,44 @@
           }
         }
         // Punctuation cleanups
-        text = text.replace(/,/g, '،').replace(/\\?/g, '؟').replace(/;/g, '؛');
-        text = text.replace(/\\s+([،,.!?؟؛])/g, '$1');
-        text = text.replace(/(^|\\s)و\\s+([\\u0600-\\u06FF]+)/g, '$1و$2');
+        text = text.replace(/,/g, '،').replace(/\?/g, '؟').replace(/;/g, '؛');
+        text = text.replace(/\s+([،,.!?؟؛])/g, '$1');
+        text = text.replace(/(^|\s)و\s+([\u0600-\u06FF]+)/g, '$1و$2');
 
         document.getElementById('textInput').value = text;
         hideProcessingIndicator();
         if (btnApply) btnApply.disabled = false;
-        runCheck(false);
-        updateReaderDisplay();
-        showToast(currentLang === 'ar' ? '✓ تم تطبيق جميع التصحيحات بنجاح!' : '✓ All corrections applied!', 'success');
-      }, 450);
-    }
-
-    function fixAllErrors() {
-      let text = document.getElementById('textInput').value;
-      const issues = analyze(text);
-      if (issues.length === 0) {
-        showToast(currentLang === 'ar' ? 'النص خالٍ من الأخطاء بالفعل' : 'No errors found in text', 'info');
-        return;
-      }
-
-      showProcessingIndicator('جارٍ المعالجة الفورية وتصحيح الأخطاء بالذكاء الاصطناعي', 'Processing text and fixing all errors with AI');
-      const btnFix = document.getElementById('btnFixAll');
-      if (btnFix) btnFix.disabled = true;
-
-      setTimeout(() => {
-        for (const item of issues) {
-          if (item.orig && item.sugg && !item.orig.includes('مسافة')) {
-            text = text.split(item.orig).join(item.sugg);
-          }
-        }
-        // Punctuation cleanups
-        text = text.replace(/,/g, '،').replace(/\\?/g, '؟').replace(/;/g, '؛');
-        text = text.replace(/\\s+([،,.!?؟؛])/g, '$1');
-        text = text.replace(/(^|\\s)و\\s+([\\u0600-\\u06FF]+)/g, '$1و$2');
-
-        document.getElementById('textInput').value = text;
-        hideProcessingIndicator();
-        if (btnFix) btnFix.disabled = false;
-        runCheck(false);
-        updateReaderDisplay();
 
         const alertEl = document.getElementById('statusBanner');
         if (alertEl) {
           alertEl.style.display = 'block';
           alertEl.innerText = currentLang === 'ar' ? '✓ تم تصحيح كافة الأخطاء النحوية والترقيمية فورياً!' : '✓ All grammar and punctuation errors fixed!';
-          setTimeout(() => { alertEl.style.display = 'none'; }, 4500);
+          setTimeout(() => { alertEl.style.display = 'none'; }, 4000);
         }
+
+        runCheck(false);
+        updateReaderDisplay();
         showToast(currentLang === 'ar' ? '✓ تم تصحيح النص بالكامل بنجاح!' : '✓ All text corrections applied!', 'success');
-      }, 550);
+      }, 400);
+    }
+
+    function fixAllErrors() {
+      applyAll();
     }
 
     function loadSample(i, btnEl) {
-      document.getElementById('textInput').value = samples[i];
-      document.querySelectorAll('.sample-pill').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.sample-pill').forEach(b => b.classList.remove('active'));
       if (btnEl) btnEl.classList.add('active');
-      runCheck(false);
+      document.getElementById('textInput').value = samples[i];
+      runCheck(true);
       updateReaderDisplay();
       showToast(currentLang === 'ar' ? ('تم تحميل النموذج ' + (i + 1)) : ('Loaded Sample ' + (i + 1)), 'info');
     }
 
     function loadRuleIntoChecker(sentence) {
-      document.getElementById('textInput').value = sentence;
       switchNav('Checker');
-      runCheck(false);
+      document.getElementById('textInput').value = sentence;
+      runCheck(true);
       updateReaderDisplay();
       showToast(currentLang === 'ar' ? 'تم تحميل مثال القاعدة في المصحح' : 'Loaded rule example into checker', 'success');
     }
@@ -1555,14 +1637,11 @@
         showToast(currentLang === 'ar' ? 'لا يوجد نص لنسخه' : 'No text to copy', 'error');
         return;
       }
-      navigator.clipboard?.writeText(text);
-      const btn = document.getElementById('btnCopyMain');
-      if (btn) {
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<span>✓</span> تم!';
-        setTimeout(() => { btn.innerHTML = orig; }, 1800);
-      }
-      showToast(currentLang === 'ar' ? '✓ تم نسخ النص إلى الحافظة' : '✓ Copied text to clipboard', 'success');
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(currentLang === 'ar' ? '✓ تم نسخ النص إلى الحافظة' : '✓ Copied text to clipboard', 'success');
+      }).catch(() => {
+        showToast(currentLang === 'ar' ? 'تعذر النسخ تلقائياً' : 'Could not copy', 'error');
+      });
     }
 
     function pasteFromClipboard() {
@@ -1570,89 +1649,86 @@
         navigator.clipboard.readText().then(text => {
           if (text) {
             document.getElementById('textInput').value = text;
-            runCheck(false);
+            runCheck(true);
             updateReaderDisplay();
             showToast(currentLang === 'ar' ? '✓ تم لصق النص من الحافظة' : '✓ Pasted text', 'success');
           } else {
             showToast(currentLang === 'ar' ? 'الحافظة فارغة' : 'Clipboard is empty', 'info');
           }
         }).catch(() => {
-          // Fallback demo paste
-          document.getElementById('textInput').value = "ذهب محمد الى المدرسة، و هو يحمل كتبه وشاهد عصفورا جميلا.";
-          runCheck(false);
-          updateReaderDisplay();
-          showToast(currentLang === 'ar' ? 'تم لصق نص تجريبي' : 'Pasted demo text', 'info');
+          showToast(currentLang === 'ar' ? 'يرجى لصق النص يدوياً' : 'Please paste text manually', 'info');
         });
-      } else {
-        document.getElementById('textInput').value = "ذهب محمد الى المدرسة، و هو يحمل كتبه وشاهد عصفورا جميلا.";
-        runCheck(false);
-        updateReaderDisplay();
-        showToast(currentLang === 'ar' ? 'تم لصق نص تجريبي' : 'Pasted demo text', 'info');
       }
     }
 
-    // Write with AI functions
-    let isWriteAiOpen = false;
+    // AI Writing Assistant Simulation & Synthesis
     let currentAiText = '';
 
     function toggleWriteAiCard() {
-      isWriteAiOpen = !isWriteAiOpen;
       const content = document.getElementById('writeAiContent');
       const btn = document.getElementById('writeAiToggleBtn');
-      if (content) content.style.display = isWriteAiOpen ? 'block' : 'none';
-      if (btn) btn.innerText = isWriteAiOpen ? '▲' : '▼';
+      if (!content) return;
+      const isOpen = content.style.display === 'block';
+      content.style.display = isOpen ? 'none' : 'block';
+      if (btn) btn.innerText = isOpen ? '▼' : '▲';
     }
 
-    function setAiPrompt(promptText) {
-      document.getElementById('aiPromptInput').value = promptText;
-      showToast(currentLang === 'ar' ? 'تم اختيار القالب' : 'Template selected', 'info');
+    function setAiPrompt(text) {
+      const input = document.getElementById('aiPromptInput');
+      if (input) {
+        input.value = text;
+        input.focus();
+        showToast(currentLang === 'ar' ? 'تم اختيار القالب' : 'Template selected', 'info');
+      }
     }
 
     function generateAiWriting() {
       const prompt = (document.getElementById('aiPromptInput').value || '').trim();
       const currentContent = (document.getElementById('textInput').value || '').trim();
       const tone = document.getElementById('aiToneSelect').value;
-      const genBtn = document.getElementById('btnGenerateAi');
 
-      genBtn.disabled = true;
-      genBtn.innerHTML = '<span>⏳</span> ' + (currentLang === 'ar' ? 'جارٍ الصياغة والتوليد...' : 'Generating with AI...');
+      const genBtn = document.getElementById('btnGenerateAi');
+      if (genBtn) {
+        genBtn.disabled = true;
+        genBtn.innerHTML = '<span>⏳</span> ' + (currentLang === 'ar' ? 'جارٍ الصياغة والتوليد...' : 'Generating with AI...');
+      }
 
       setTimeout(() => {
         let generated = '';
-        if (prompt.includes('شكر')) {
-          generated = 'يطيب لي أن أرفع إليكم أسمى آيات الشكر والتقدير والامتنان على جهودكم المخلصة ودعمكم الكريم، متمنياً لكم دوام التوفيق والسداد والارتقاء المستمر.';
-        } else if (prompt.includes('إجازة')) {
-          generated = 'أتقدم إلى عنايتكم بطلب الموافقة على منحي إجازة اعتيادية تبدأ من التاريخ المحدد، شاكراً ومقدراً لكم حسن تعاونكم وتفهمكم الكريم.';
-        } else if (prompt.includes('مقال')) {
-          generated = 'تتبوأ اللغة العربية مكانة رفيعة في سماء الحضارة الإنسانية؛ إذ تتجلى فيها عبقرية البيان ودقة الإعراب، وثراء المفردات التي تأسر القلوب والألباب.';
+        if (prompt.includes('شكر') || prompt.includes('Thank')) {
+          generated = 'يطيب لي ويسرني أن أتقدم إليكم بأسمى آيات الشكر وعظيم الامتنان على جهودكم المباركة وعطائكم المستمر، سائلاً المولى عز وجل لكم دوام التوفيق والارتقاء.';
+        } else if (prompt.includes('إجازة') || prompt.includes('Leave')) {
+          generated = 'أتوجه إلى سعادتكم بطلب الحصول على إجازة اعتيادية تبدأ من مطلع الأسبوع القادم، مع التزامي التام بمتابعة كافة المهام العاجلة والتنسيق مع الزملاء.';
+        } else if (prompt.includes('مقال') || prompt.includes('Essay')) {
+          generated = 'تتبوأ اللغة العربية منزلة سامية بين لغات الأرض بحكم إعجازها اللغوي ورصانة بنيانها، حيث تتجلى بلاغتها في الدقة الإعرابية وجماليات النظم البديع.';
         } else if (currentContent) {
-          generated = 'استناداً إلى الفكرة المطروحة: ' + currentContent.replace(/الى/g, 'إلى').replace(/ان/g, 'إنّ') + '؛ يتضح جلياً ترابط المعاني وسمو الأسلوب العربي الفصيح.';
+          generated = 'انطلق محمدٌ مستبشراً إلى المدرسةِ ممسكاً بكتبه النافعة، وفي طريقه تأمل طيراً مغرداً شدا بأعذب الألحان في سماء الصباح البهيج.';
         } else {
-          generated = 'يسرنا التواصل معكم بأطيب التحيات، مؤكدين التزامنا بتقديم أعلى درجات الجودة والإتقان في صياغة محتوى عربي رصين ومعبر.';
-        }
-
-        if (tone === 'concise') {
-          generated = generated.split('،')[0] + '.';
-        } else if (tone === 'academic') {
-          generated = 'تقتضي المقاربة المنهجية التأكيد على أن ' + generated;
-        } else if (tone === 'creative') {
-          generated = '✨ كالدر المنظوم في جيد الفصاحة، ' + generated;
+          generated = 'الحمد لله الذي بنعمته تتم الصالحات؛ يسرنا أن نضع بين أيديكم هذا الإصدار المميز من أداتنا اللغوية الهادفة إلى خدمة الضاد وإعلاء شأن الكتابة الفصيحة.';
         }
 
         currentAiText = generated;
-        document.getElementById('aiResultText').innerText = generated;
-        document.getElementById('aiResultBox').style.display = 'block';
+        const resultBox = document.getElementById('aiResultBox');
+        const resultText = document.getElementById('aiResultText');
+        if (resultBox && resultText) {
+          resultBox.style.display = 'block';
+          resultText.innerText = currentAiText;
+        }
 
-        genBtn.disabled = false;
-        genBtn.innerHTML = '<span>✨</span> ' + (currentLang === 'ar' ? 'اكتب الآن بالذكاء الاصطناعي' : 'Generate with AI');
+        if (genBtn) {
+          genBtn.disabled = false;
+          genBtn.innerHTML = '<span>✨</span> ' + (currentLang === 'ar' ? 'اكتب الآن بالذكاء الاصطناعي' : 'Generate with AI');
+        }
+
         showToast(currentLang === 'ar' ? '✓ تم توليد النص الفصيح بنجاح!' : '✓ Text generated successfully!', 'success');
       }, 700);
     }
 
     function copyAiResult() {
       if (!currentAiText) return;
-      navigator.clipboard?.writeText(currentAiText);
-      showToast(currentLang === 'ar' ? 'تم نسخ النص المولد بنجاح' : 'Copied AI text successfully', 'success');
+      navigator.clipboard.writeText(currentAiText).then(() => {
+        showToast(currentLang === 'ar' ? 'تم نسخ النص المولد بنجاح' : 'Copied AI text successfully', 'success');
+      });
     }
 
     function applyAiResult() {
@@ -1679,17 +1755,296 @@
       showToast(isDark ? 'تم تفعيل المظهر الداكن 🌙' : 'تم تفعيل المظهر الفاتح ☀️', 'info');
     }
 
-    function toggleLang() {
-      currentLang = currentLang === 'ar' ? 'en' : 'ar';
-      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-      document.documentElement.lang = currentLang;
-      document.getElementById('langBtn').innerText = currentLang === 'ar' ? 'EN' : 'عربي';
+    // FULL ENGLISH & ARABIC TRANSLATION DICTIONARY
+    // All UI labels in full English, linguistic examples strictly preserved in Arabic!
+    const translations = {
+      ar: {
+        dir: 'rtl',
+        langBtn: 'EN',
+        slidesLabel: 'العرض',
+        readerBtnLabel: 'القارئ',
+        heroTitle: 'مصحح النحو والترقيم العربي',
+        heroSub: 'افحص النصوص العربية وصحح الهمزات، علامات الترقيم، ومطابقة الفعل والفاعل فورياً.',
+        readerCardTitle: 'وضع القارئ الصوتي الميسّر (Accessibility)',
+        readerCardSub: 'خدمة نطق النصوص المكتوبة وتكبير الخط لغير القادرين على القراءة',
+        btnReaderMicLabel: 'إملاء صوتي بالمايكروفون',
+        btnSpeakLabel: 'انطق النص الآن',
+        btnStopSpeech: '⏹️ إيقاف النطق',
+        readerFontLabel: 'الخط:',
+        btnReaderContrast: 'تباين عالٍ 👁️',
+        writeAiTitle: 'الكتابة بالذكاء الاصطناعي (Write with AI)',
+        writeAiSub: 'صياغة نصوص فصيحة، رسائل، ومقالات باحترافية',
+        writeAiTemplatesLabel: 'نماذج وقوالب جاهزة (انقر للاختيار):',
+        tplBtn0: 'رسالة شكر رسمية',
+        tplBtn1: 'طلب إجازة رسمي',
+        tplBtn2: 'مقدمة مقال أدبي',
+        tplBtn3: 'إعادة صياغة النص',
+        aiPromptPlaceholder: 'ماذا تريد أن يكتب الذكاء الاصطناعي؟ (مثال: خطاب تهنئة، بريد رسمي...)',
+        aiToneLabel: 'الأسلوب / النبرة:',
+        toneFormal: 'رسمي وفصيح (Formal)',
+        toneCreative: 'إبداعي وبلاغي (Creative)',
+        toneConcise: 'موجز ومباشر (Concise)',
+        toneAcademic: 'أكاديمي رصين (Academic)',
+        tonePersuasive: 'إقناعي مؤثر (Persuasive)',
+        btnGenerateAi: '<span>✨</span> اكتب الآن بالذكاء الاصطناعي',
+        inputLabel: 'النص العربي',
+        micLabel: 'إملاء صوتي',
+        btnPasteMain: '<span>📋</span> لصق',
+        btnCopyMain: '<span>📑</span> نسخ',
+        btnClearMain: '<span>🗑️</span> مسح',
+        micStatusText: 'جارٍ الاستماع لإملائك الصوتي باللغة العربية الآن... تحدث بوضوح',
+        textInputPlaceholder: 'تحدث معي بالمايكروفون أو اكتب نصك هنا...',
+        statusBanner: '✓ تم تصحيح كافة الأخطاء بنجاح!',
+        btnFixErrorsLabel: 'تصحيح الأخطاء',
+        btnCheckLabel: 'تدقيق وفحص',
+        btnApplyAllLabel: 'تطبيق الكل',
+        processingTitle: 'جارٍ تدقيق وتحليل النص العربي بالذكاء الاصطناعي',
+        processingSubtitle: 'فحص الإعراب، مطابقة الفعل والفاعل، ضبط علامات الترقيم ورسم الهمزات...',
+        issuesHeading: 'الأخطاء المكتشفة:',
+        inspTitle: 'تفاصيل التصحيح',
+        inspIssueLabel: 'المشكلة:',
+        inspSuggLabel: 'الاقتراح:',
+        btnApplySingle: '<span>✓</span> تطبيق هذا التصحيح',
+        btnPrevIssue: '<span>➡</span> السابق',
+        btnNextIssue: 'التالي <span>⬅</span>',
+        rulesGuideTitle: 'دليل القواعد النحوية والترقيم',
+        rulesGuideSub: 'قواعد مبسطة مدعومة بأمثلة تطبيقية واضحة',
+        rule1Title: 'همزتا الوصل والقطع',
+        rule1Badge: 'إملاء',
+        rule1Desc: 'همزة القطع تثبت نطقاً ورسماً (إلى، أرسل، إن). همزة الوصل تسقط في درج الكلام (استمع، اكتب).',
+        rule1Example: 'الصواب: ذهب محمدٌ إلى المدرسةِ',
+        rule1Btn: '⚡ تجربة هذه القاعدة في المصحح',
+        rule2Title: 'مطابقة الفعل للفاعل والمبتدأ',
+        rule2Badge: 'توافق',
+        rule2Desc: 'يؤنث الفعل مع الفاعل المؤنث الحقيقي ويطابق المبتدأ في التذكير والتأنيث والعدد.',
+        rule2Example: 'الصواب: المعلمةُ تُساعدُ الطلاب',
+        rule2Btn: '⚡ تجربة هذه القاعدة في المصحح',
+        rule3Title: 'رسم تنوين الفتح والنصب',
+        rule3Badge: 'تنوين',
+        rule3Desc: 'يُزاد ألف بعد تنوين الفتح في الأسماء المنونة (عصفوراً، جميلاً)، ولا تُزاد بعد التاء المربوطة أو الهمزة المسبوقة بألف (مساءً).',
+        rule3Example: 'الصواب: شاهد عصفوراً جميلاً',
+        rule3Btn: '⚡ تجربة هذه القاعدة في المصحح',
+        rule4Title: 'علامات الترقيم وواو العطف',
+        rule4Badge: 'ترقيم',
+        rule4Desc: 'الفاصلة العربية (،) تلتصق بالكلمة السابقة، وواو العطف تتصل بالكلمة التالية مباشرة دون مسافة.',
+        rule4Example: 'الصواب: نعم، شكراً لك وجزاك الله خيراً.',
+        rule4Btn: '⚡ تجربة هذه القاعدة في المصحح',
+        pricingTitle: 'خطط وأسعار NahwiFix',
+        pricingSub: 'اختر الخطة المناسبة لاحتياجاتك التدقيقية',
+        planFreeTitle: 'الخطة الأساسية',
+        badgePlanFree: 'المفعلة',
+        planFreePrice: 'مجاناً دائماً',
+        planFreeDesc: '1,000 كلمة لكل فحص، قواعد النحو والترقيم الأساسية، سجل محلي.',
+        btnSelectFree: '✓ خطتك الحالية',
+        planProTitle: 'الخطة الاحترافية (Pro) ⭐',
+        badgePlanPro: 'الأكثر طلباً',
+        planProPrice: '$9 / شهرياً',
+        planProDesc: 'فحص غير محدود، تشكيل كامل بالحركات، تعرف بصري OCR، وتوليد نطق صوتي وتصدير PDF.',
+        btnSelectProLabel: '<span>⭐</span> ترقية إلى Pro الآن',
+        planEnterpriseTitle: 'خطة المؤسسات (Enterprise)',
+        badgePlanEnterprise: 'للشركات',
+        planEnterprisePrice: '$29 / شهرياً',
+        planEnterpriseDesc: 'دعم فني مخصص، تراخيص متعددة للفرق، والوصول لواجهة البرمجة (API).',
+        btnSelectEnterpriseLabel: 'طلب اشتراك المؤسسات',
+        accountTitle: 'حساب NahwiFix',
+        accountSub: 'مزامنة النصوص والمستندات وحفظ الإعدادات المفضلة',
+        tabSignInBtn: 'تسجيل الدخول',
+        tabSignUpBtn: 'إنشاء حساب',
+        lblUsername: 'الاسم الكامل:',
+        lblEmail: 'البريد الإلكتروني:',
+        lblPassword: 'كلمة المرور:',
+        btnAuthSubmitLabel: 'تسجيل الدخول',
+        btnQuickDemoLogin: '⚡ دخول سريع',
+        statCheckedTextsLbl: 'نصوص مدققة',
+        statWordsAnalyzedLbl: 'كلمة مفحوصة',
+        statAccuracyLbl: 'دقة التدقيق',
+        btnProfileManagePlan: '💳 إدارة الخطة',
+        btnProfileLogout: 'تسجيل الخروج',
+        termsTitle: 'الشروط والخصوصية',
+        termPrivacyText: '<strong>🔒 حماية الخصوصية:</strong> جميع النصوص تفحص محلياً على جهازك ويتم حفظ السجل في قاعدة بيانات Room المشفرة لضمان الخصوصية التامة.',
+        termIpText: '<strong>⚖️ الملكية الفكرية:</strong> جميع حقوق النصوص المحررة والمدققة تعود ملكيتها الخالصة للمستخدم دون أي احتفاظ من المنصة.',
+        termAiText: '<strong>🌐 سياسة الذكاء الاصطناعي:</strong> محرك التوليد وإعادة الصياغة يلتزم بأعلى معايير الأمانة اللغوية والأخلاقية.',
+        btnAcceptTermsLabel: 'أوافق على كافة الشروط والخصوصية',
+        btnPrintTermsBtn: '📄 طباعة الشروط'
+      },
+      en: {
+        dir: 'ltr',
+        langBtn: 'عربي',
+        slidesLabel: 'Slides',
+        readerBtnLabel: 'Reader',
+        heroTitle: 'Arabic Grammar & Punctuation Checker',
+        heroSub: 'Inspect Arabic texts and instantly correct hamzas, punctuation, and subject-verb agreement.',
+        readerCardTitle: 'Accessible Voice Reader Mode',
+        readerCardSub: 'Text-to-speech reading and font enlargement for reading accessibility',
+        btnReaderMicLabel: 'Voice Dictation via Microphone',
+        btnSpeakLabel: 'Read Aloud Now',
+        btnStopSpeech: '⏹️ Stop Audio',
+        readerFontLabel: 'Font:',
+        btnReaderContrast: 'High Contrast 👁️',
+        writeAiTitle: 'Write with AI',
+        writeAiSub: 'Draft fluent Arabic texts, letters, and essays with professional precision',
+        writeAiTemplatesLabel: 'Ready Templates & Prompts (Click to choose):',
+        tplBtn0: 'Official Thank You Letter',
+        tplBtn1: 'Formal Leave Request',
+        tplBtn2: 'Literary Essay Intro',
+        tplBtn3: 'Rephrase Editor Text',
+        aiPromptPlaceholder: 'What would you like the AI to write? (e.g. congratulations letter, official email...)',
+        aiToneLabel: 'Style / Tone:',
+        toneFormal: 'Formal & Fluent',
+        toneCreative: 'Creative & Rhetorical',
+        toneConcise: 'Concise & Direct',
+        toneAcademic: 'Academic & Rigorous',
+        tonePersuasive: 'Persuasive & Impactful',
+        btnGenerateAi: '<span>✨</span> Generate with AI',
+        inputLabel: 'Arabic Text',
+        micLabel: 'Voice Dictation',
+        btnPasteMain: '<span>📋</span> Paste',
+        btnCopyMain: '<span>📑</span> Copy',
+        btnClearMain: '<span>🗑️</span> Clear',
+        micStatusText: 'Listening to your Arabic voice dictation now... speak clearly',
+        textInputPlaceholder: 'Speak with me or type your Arabic text here...',
+        statusBanner: '✓ All errors corrected successfully!',
+        btnFixErrorsLabel: 'Fix All Errors',
+        btnCheckLabel: 'Check & Analyze',
+        btnApplyAllLabel: 'Apply All',
+        processingTitle: 'Analyzing Arabic text with AI...',
+        processingSubtitle: 'Checking grammar, subject-verb agreement, punctuation, and hamzas...',
+        issuesHeading: 'Detected Issues:',
+        inspTitle: 'Correction Details',
+        inspIssueLabel: 'Issue:',
+        inspSuggLabel: 'Suggestion:',
+        btnApplySingle: '<span>✓</span> Apply This Correction',
+        btnPrevIssue: '<span>⬅</span> Previous',
+        btnNextIssue: 'Next <span>➡</span>',
+        rulesGuideTitle: 'Grammar & Punctuation Rules Guide',
+        rulesGuideSub: 'Clear guidelines supported by verified practical examples',
+        rule1Title: 'Hamzat Al-Wasl & Al-Qat'',
+        rule1Badge: 'Spelling',
+        rule1Desc: 'Hamzat al-qat' is pronounced and written (إلى, أرسل, إن). Hamzat al-wasl is omitted in connected speech (استمع, اكتب).',
+        rule1Example: 'Correct: ذهب محمدٌ إلى المدرسةِ',
+        rule1Btn: '⚡ Try this rule in Checker',
+        rule2Title: 'Subject-Verb Agreement',
+        rule2Badge: 'Agreement',
+        rule2Desc: 'The verb is feminized with a real feminine subject and matches the subject in gender and number.',
+        rule2Example: 'Correct: المعلمةُ تُساعدُ الطلاب',
+        rule2Btn: '⚡ Try this rule in Checker',
+        rule3Title: 'Tanween Al-Fath (Accusative Nunation)',
+        rule3Badge: 'Tanween',
+        rule3Desc: 'An alif is appended after tanween al-fath in nunated nouns (عصفوراً, جميلاً), but not after taa marbuta or hamza preceded by alif (مساءً).',
+        rule3Example: 'Correct: شاهد عصفوراً جميلاً',
+        rule3Btn: '⚡ Try this rule in Checker',
+        rule4Title: 'Punctuation & Conjunction Waw',
+        rule4Badge: 'Punctuation',
+        rule4Desc: 'The Arabic comma (،) attaches to the preceding word, and the conjunction waw connects directly to the following word without a space.',
+        rule4Example: 'Correct: نعم، شكراً لك وجزاك الله خيراً.',
+        rule4Btn: '⚡ Try this rule in Checker',
+        pricingTitle: 'NahwiFix Plans & Pricing',
+        pricingSub: 'Choose the right plan for your proofreading needs',
+        planFreeTitle: 'Basic Plan',
+        badgePlanFree: 'Active',
+        planFreePrice: 'Always Free',
+        planFreeDesc: '1,000 words per check, basic grammar & punctuation rules, local history.',
+        btnSelectFree: '✓ Your Current Plan',
+        planProTitle: 'Professional Plan (Pro) ⭐',
+        badgePlanPro: 'Most Popular',
+        planProPrice: '$9 / month',
+        planProDesc: 'Unlimited checks, full diacritics/tashkeel, OCR text recognition, voice generation, and PDF export.',
+        btnSelectProLabel: '<span>⭐</span> Upgrade to Pro Now',
+        planEnterpriseTitle: 'Enterprise Plan',
+        badgePlanEnterprise: 'For Teams',
+        planEnterprisePrice: '$29 / month',
+        planEnterpriseDesc: 'Dedicated support, multiple team licenses, and full API access.',
+        btnSelectEnterpriseLabel: 'Request Enterprise Plan',
+        accountTitle: 'NahwiFix Account',
+        accountSub: 'Sync texts and documents and save preferences',
+        tabSignInBtn: 'Sign In',
+        tabSignUpBtn: 'Create Account',
+        lblUsername: 'Full Name:',
+        lblEmail: 'Email Address:',
+        lblPassword: 'Password:',
+        btnAuthSubmitLabel: 'Sign In',
+        btnQuickDemoLogin: '⚡ Quick Demo Login',
+        statCheckedTextsLbl: 'Checked Texts',
+        statWordsAnalyzedLbl: 'Words Analyzed',
+        statAccuracyLbl: 'Accuracy',
+        btnProfileManagePlan: '💳 Manage Plan',
+        btnProfileLogout: 'Sign Out',
+        termsTitle: 'Terms & Privacy Policy',
+        termPrivacyText: '<strong>🔒 Privacy Protection:</strong> All texts are analyzed locally on your device and history is securely kept in an encrypted database for complete privacy.',
+        termIpText: '<strong>⚖️ Intellectual Property:</strong> All rights to edited and proofread texts belong exclusively to the user with zero retention by the platform.',
+        termAiText: '<strong>🌐 AI Safety Policy:</strong> Our text generation and rephrasing engines strictly adhere to linguistic integrity and ethical guidelines.',
+        btnAcceptTermsLabel: 'I Agree to Terms & Privacy',
+        btnPrintTermsBtn: '📄 Print Terms'
+      }
+    };
 
+    function setLanguage(lang) {
+      currentLang = lang;
+      const dict = translations[lang] || translations.ar;
+
+      document.documentElement.dir = dict.dir;
+      document.documentElement.lang = lang;
+
+      const langBtn = document.getElementById('langBtn');
+      if (langBtn) langBtn.innerText = dict.langBtn;
+
+      // Update all registered element IDs
+      for (const [id, val] of Object.entries(dict)) {
+        if (id === 'dir' || id === 'langBtn') continue;
+        const el = document.getElementById(id);
+        if (el) {
+          if (val.includes('<') && val.includes('>')) {
+            el.innerHTML = val;
+          } else {
+            el.innerText = val;
+          }
+        }
+      }
+
+      // Update placeholders
+      const aiPrompt = document.getElementById('aiPromptInput');
+      if (aiPrompt && dict.aiPromptPlaceholder) aiPrompt.placeholder = dict.aiPromptPlaceholder;
+
+      const textInput = document.getElementById('textInput');
+      if (textInput && dict.textInputPlaceholder) textInput.placeholder = dict.textInputPlaceholder;
+
+      // Update Tone options
+      const toneSelect = document.getElementById('aiToneSelect');
+      if (toneSelect && toneSelect.options.length >= 5) {
+        toneSelect.options[0].text = dict.toneFormal;
+        toneSelect.options[1].text = dict.toneCreative;
+        toneSelect.options[2].text = dict.toneConcise;
+        toneSelect.options[3].text = dict.toneAcademic;
+        toneSelect.options[4].text = dict.tonePersuasive;
+      }
+
+      // Update bottom navigation items
       document.querySelectorAll('.nav-label').forEach(el => {
         el.innerText = el.getAttribute('data-' + currentLang);
       });
+
+      // Update current issues inspector if active
+      if (activeIssue) {
+        selectIssue(activeIssueIndex);
+      }
+
+      // Run check to update stats in target language
       runCheck(false);
-      showToast(currentLang === 'ar' ? 'تم التبديل إلى اللغة العربية' : 'Switched to English', 'info');
+    }
+
+    function toggleLang() {
+      const nextLang = currentLang === 'ar' ? 'en' : 'ar';
+      setLanguage(nextLang);
+
+      // Persist in localStorage and update URL param without reloading
+      try {
+        localStorage.setItem('nahwifix_lang', nextLang);
+        const url = new URL(window.location);
+        url.searchParams.set('lang', nextLang);
+        window.history.replaceState({}, '', url);
+      } catch (e) {}
+
+      showToast(nextLang === 'ar' ? 'تم التبديل إلى اللغة العربية' : 'Switched to English', 'info');
     }
 
     function switchNav(name, el) {
@@ -1734,6 +2089,7 @@
     }
 
     function updateReaderDisplay() {
+      // Linguistic example sentence stays in Arabic!
       const text = document.getElementById('textInput').value.trim() || 'ذهب محمدٌ إلى المدرسةِ، وهو يحملُ كتبَه وشاهدَ عصفوراً جميلاً.';
       const box = document.getElementById('readerDisplayBox');
       if (box) {
@@ -1750,56 +2106,61 @@
           box.style.borderColor = '#2563EB';
         }
       }
-      const sizeDisplay = document.getElementById('readerFontSizeDisplay');
-      if (sizeDisplay) sizeDisplay.innerText = readerFontSize + 'px';
     }
 
     function changeReaderFontSize(delta) {
-      readerFontSize = Math.max(16, Math.min(36, readerFontSize + delta));
+      readerFontSize = Math.min(42, Math.max(16, readerFontSize + delta));
+      const display = document.getElementById('readerFontSizeDisplay');
+      if (display) display.innerText = readerFontSize + 'px';
       updateReaderDisplay();
       showToast((currentLang === 'ar' ? 'حجم الخط: ' : 'Font Size: ') + readerFontSize + 'px', 'info');
     }
 
     function toggleReaderHighContrast() {
       isReaderHighContrast = !isReaderHighContrast;
-      const btn = document.getElementById('btnReaderContrast');
-      if (btn) btn.classList.toggle('active', isReaderHighContrast);
       updateReaderDisplay();
-      showToast(isReaderHighContrast ? 'تم تفعيل التباين العالي 👁️' : 'تم تعطيل التباين العالي', 'info');
+      showToast(isReaderHighContrast ? 'تم تفعيل التباين العالي 👁️' : 'تم استعادة الألوان الأصلية', 'info');
     }
 
     function copyReaderText() {
-      const text = document.getElementById('readerDisplayBox').innerText;
-      navigator.clipboard?.writeText(text);
-      showToast(currentLang === 'ar' ? '✓ تم نسخ النص المقروء' : '✓ Copied text', 'success');
+      const box = document.getElementById('readerDisplayBox');
+      if (!box) return;
+      navigator.clipboard.writeText(box.innerText).then(() => {
+        showToast(currentLang === 'ar' ? '✓ تم نسخ النص المقروء' : '✓ Copied text', 'success');
+      });
     }
 
+    // Text to Speech
     function speakCurrentText() {
       const text = document.getElementById('textInput').value.trim() || 'ذهب محمدٌ إلى المدرسةِ، وهو يحملُ كتبَه وشاهدَ عصفوراً جميلاً.';
-      if (!text) return;
-
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'ar-SA';
-        utterance.rate = 0.88;
-
+        utterance.rate = 0.9;
+        
         utterance.onstart = () => {
           isCurrentlySpeaking = true;
           const lbl = document.getElementById('btnSpeakLabel');
           if (lbl) lbl.innerText = currentLang === 'ar' ? 'جارٍ النطق الآن...' : 'Speaking...';
           showToast('🔊 ' + (currentLang === 'ar' ? 'جارٍ النطق الصوتي الآن...' : 'Reading aloud...'), 'info');
         };
-        utterance.onend = utterance.onerror = () => {
+
+        utterance.onend = () => {
           isCurrentlySpeaking = false;
           const lbl = document.getElementById('btnSpeakLabel');
-          if (lbl) lbl.innerText = currentLang === 'ar' ? 'انطق النص الآن' : 'Read Aloud';
+          if (lbl) lbl.innerText = currentLang === 'ar' ? 'انطق النص الآن' : 'Read Aloud Now';
+        };
+
+        utterance.onerror = () => {
+          isCurrentlySpeaking = false;
+          const lbl = document.getElementById('btnSpeakLabel');
+          if (lbl) lbl.innerText = currentLang === 'ar' ? 'انطق النص الآن' : 'Read Aloud Now';
         };
 
         window.speechSynthesis.speak(utterance);
       } else {
-        // Fallback simulation for environments without Web Speech audio
-        showToast('🔊 محاكاة النطق الصوتي: ' + text.substring(0, 30) + '...', 'info');
+        showToast('ميزة النطق الصوتي غير مدعومة في متصفحك', 'error');
       }
     }
 
@@ -1809,199 +2170,186 @@
       }
       isCurrentlySpeaking = false;
       const lbl = document.getElementById('btnSpeakLabel');
-      if (lbl) lbl.innerText = currentLang === 'ar' ? 'انطق النص الآن' : 'Read Aloud';
+      if (lbl) lbl.innerText = currentLang === 'ar' ? 'انطق النص الآن' : 'Read Aloud Now';
       showToast(currentLang === 'ar' ? 'تم إيقاف النطق' : 'Stopped audio', 'info');
     }
 
-    // Voice Dictation with Simulated Fallback
-    let speechRecognizer = null;
-    let isListeningToSpeech = false;
-    let simInterval = null;
+    // Real-Time Web Speech Dictation
+    let isListening = false;
+    let recognizer = null;
 
-    function initSpeechRecognizer() {
+    function initSpeechRecognition() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) return null;
-      try {
-        const recognizer = new SpeechRecognition();
-        recognizer.lang = 'ar-SA';
-        recognizer.continuous = true;
-        recognizer.interimResults = true;
+      const rec = new SpeechRecognition();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.lang = 'ar-SA';
 
-        recognizer.onstart = () => {
-          isListeningToSpeech = true;
-          updateDictationUI(true);
-        };
+      rec.onstart = () => {
+        isListening = true;
+        updateDictationUI(true);
+      };
 
-        recognizer.onresult = (event) => {
-          let transcript = '';
-          for (let i = 0; i < event.results.length; i++) {
-            transcript += event.results[i][0].transcript + ' ';
-          }
-          transcript = transcript.trim();
-          if (transcript) {
-            const textInput = document.getElementById('textInput');
-            textInput.value = transcript;
-            updateStats();
-            updateReaderDisplay();
-          }
-        };
-
-        recognizer.onerror = () => {
-          isListeningToSpeech = false;
-          updateDictationUI(false);
-        };
-
-        recognizer.onend = () => {
-          isListeningToSpeech = false;
-          updateDictationUI(false);
+      rec.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          transcript += event.results[i][0].transcript;
+        }
+        if (transcript.trim()) {
+          const textInput = document.getElementById('textInput');
+          textInput.value = transcript;
           runCheck(false);
-        };
+          updateReaderDisplay();
+        }
+      };
 
-        return recognizer;
-      } catch (e) {
-        return null;
-      }
+      rec.onerror = (event) => {
+        console.warn('Speech recognition error:', event.error);
+        stopSpeechRecognition();
+      };
+
+      rec.onend = () => {
+        if (isListening) {
+          stopSpeechRecognition();
+        }
+      };
+
+      return rec;
     }
 
     function toggleSpeechRecognition() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      
-      if (!speechRecognizer && SpeechRecognition) {
-        speechRecognizer = initSpeechRecognizer();
-      }
-
-      if (isListeningToSpeech) {
-        if (speechRecognizer) {
-          try { speechRecognizer.stop(); } catch (e) {}
-        }
-        if (simInterval) clearInterval(simInterval);
-        isListeningToSpeech = false;
-        updateDictationUI(false);
-        showToast(currentLang === 'ar' ? 'تم إيقاف الإملاء الصوتي' : 'Stopped dictation', 'info');
+      if (isListening) {
+        stopSpeechRecognition();
       } else {
-        isListeningToSpeech = true;
-        updateDictationUI(true);
+        startSpeechRecognition();
+      }
+    }
 
-        if (speechRecognizer) {
-          try {
-            speechRecognizer.start();
-            showToast('🎤 ' + (currentLang === 'ar' ? 'تحدث الآن، جارٍ الاستماع لإملائك...' : 'Listening to speech...'), 'info');
-            return;
-          } catch (e) {
-            // fallback to interactive live simulation
-          }
+    function startSpeechRecognition() {
+      if (!recognizer) {
+        recognizer = initSpeechRecognition();
+      }
+      if (recognizer) {
+        try {
+          recognizer.start();
+          showToast('🎤 ' + (currentLang === 'ar' ? 'تحدث الآن، جارٍ الاستماع لإملائك...' : 'Listening to speech...'), 'info');
+        } catch (e) {
+          console.warn('SpeechRecognition start failed, simulating:', e);
+          simulateDictation();
         }
+      } else {
+        simulateDictation();
+      }
+    }
 
-        // Realistic interactive dictation simulation
-        showToast('🎤 ' + (currentLang === 'ar' ? 'محاكاة الإملاء الحي: جارٍ تلقي الكلمات...' : 'Simulated Voice Dictation Active...'), 'info');
-        const simulatedWords = [
-          "ذهب", "الطلاب", "إلى", "المكتبة", "المدرسية،", "وهم", "مستعدون", "لقراءة", "كتب", "مفيدة."
-        ];
-        let wordIdx = 0;
-        const textInput = document.getElementById('textInput');
-        textInput.value = "";
-        
-        simInterval = setInterval(() => {
-          if (wordIdx < simulatedWords.length && isListeningToSpeech) {
-            textInput.value += (wordIdx === 0 ? '' : ' ') + simulatedWords[wordIdx];
-            wordIdx++;
-            updateStats();
-            updateReaderDisplay();
-          } else {
-            clearInterval(simInterval);
-            isListeningToSpeech = false;
-            updateDictationUI(false);
+    function stopSpeechRecognition() {
+      isListening = false;
+      if (recognizer) {
+        try { recognizer.stop(); } catch (e) {}
+      }
+      updateDictationUI(false);
+      showToast(currentLang === 'ar' ? 'تم إيقاف الإملاء الصوتي' : 'Stopped dictation', 'info');
+    }
+
+    function simulateDictation() {
+      isListening = true;
+      updateDictationUI(true);
+      showToast('🎤 ' + (currentLang === 'ar' ? 'محاكاة الإملاء الحي: جارٍ تلقي الكلمات...' : 'Simulated Voice Dictation Active...'), 'info');
+
+      const simulatedWords = ['كتب', 'الأستاذ', 'المقالة', 'في', 'الصحيفة', 'الرسمية'];
+      let wordIdx = 0;
+      const textInput = document.getElementById('textInput');
+      textInput.value = "";
+
+      const interval = setInterval(() => {
+        if (!isListening || wordIdx >= simulatedWords.length) {
+          clearInterval(interval);
+          if (isListening) {
+            stopSpeechRecognition();
             showToast(currentLang === 'ar' ? '✓ اكتمل الإملاء الصوتي بنجاح' : '✓ Dictation completed', 'success');
           }
-        }, 600);
-      }
+          return;
+        }
+        textInput.value += (wordIdx === 0 ? '' : ' ') + simulatedWords[wordIdx];
+        runCheck(false);
+        updateReaderDisplay();
+        wordIdx++;
+      }, 700);
     }
 
-    function updateDictationUI(isListening) {
+    function updateDictationUI(listening) {
       const banner = document.getElementById('micListeningBanner');
-      const micLabel = document.getElementById('micLabel');
+      if (banner) banner.style.display = listening ? 'flex' : 'none';
+
       const micIcon = document.getElementById('micIcon');
+      const micLabel = document.getElementById('micLabel');
       const btnReaderMicLabel = document.getElementById('btnReaderMicLabel');
 
-      if (banner) banner.style.display = isListening ? 'flex' : 'none';
-      if (micLabel) micLabel.innerText = isListening ? (currentLang === 'ar' ? 'إيقاف الإملاء' : 'Stop') : (currentLang === 'ar' ? 'إملاء صوتي' : 'Dictate');
-      if (micIcon) micIcon.innerText = isListening ? '⏹️' : '🎤';
-      if (btnReaderMicLabel) btnReaderMicLabel.innerText = isListening ? (currentLang === 'ar' ? 'إيقاف الإملاء الصوتي' : 'Stop Dictation') : (currentLang === 'ar' ? 'إملاء صوتي بالمايكروفون' : 'Voice Dictate');
+      if (micIcon) micIcon.innerText = listening ? '⏹️' : '🎤';
+      if (micLabel) {
+        micLabel.innerText = listening 
+          ? (currentLang === 'ar' ? 'إيقاف الإملاء' : 'Stop')
+          : (currentLang === 'ar' ? 'إملاء صوتي' : 'Dictate');
+      }
+      if (btnReaderMicLabel) {
+        btnReaderMicLabel.innerText = listening
+          ? (currentLang === 'ar' ? 'إيقاف الإملاء الصوتي' : 'Stop Dictation')
+          : (currentLang === 'ar' ? 'إملاء صوتي بالمايكروفون' : 'Voice Dictate');
+      }
     }
 
-    // Plan Selection
+    // Pricing & Plan Selection
     function selectPlan(planKey) {
       currentPlan = planKey;
-      const freeBtn = document.getElementById('btnSelectFree');
-      const proBtn = document.getElementById('btnSelectPro');
-      const entBtn = document.getElementById('btnSelectEnterprise');
-      const profileBadge = document.getElementById('profilePlanBadge');
-
-      if (freeBtn) {
-        freeBtn.innerText = planKey === 'free' ? '✓ خطتك المفعلة حالياً' : 'التبديل إلى الخطة الأساسية';
-        freeBtn.className = planKey === 'free' ? 'btn-primary' : 'btn-outline';
+      const planNames = { free: 'الأساسية', pro: 'الاحترافية (Pro)', enterprise: 'المؤسسات' };
+      const planBadge = document.getElementById('profilePlanBadge');
+      if (planBadge) {
+        planBadge.innerText = (currentLang === 'ar' ? 'الخطة: ' : 'Plan: ') + (planNames[planKey] || planKey);
       }
-      if (proBtn) {
-        proBtn.innerText = planKey === 'pro' ? '✓ خطتك المفعلة حالياً (Pro ⭐)' : 'ترقية إلى Pro ($9)';
-        proBtn.className = planKey === 'pro' ? 'btn-primary' : 'btn-outline';
-      }
-      if (entBtn) {
-        entBtn.innerText = planKey === 'enterprise' ? '✓ خطتك المفعلة حالياً (Enterprise)' : 'طلب اشتراك المؤسسات ($29)';
-        entBtn.className = planKey === 'enterprise' ? 'btn-primary' : 'btn-outline';
-      }
-
-      if (profileBadge) {
-        profileBadge.innerText = planKey === 'pro' ? 'الخطة الاحترافية (Pro)' : (planKey === 'enterprise' ? 'خطة المؤسسات (Enterprise)' : 'الخطة الأساسية (مجاناً)');
-      }
-
-      const planNames = { free: 'الأساسية (Free)', pro: 'الاحترافية (Pro ⭐)', enterprise: 'المؤسسات (Enterprise)' };
       showToast(currentLang === 'ar' ? ('✓ تم تفعيل خطة: ' + planNames[planKey]) : ('✓ Active plan: ' + planKey.toUpperCase()), 'success');
     }
 
-    // Account Authentication Handlers
+    // Auth & Account
     let currentAuthTab = 'signin';
+
     function switchAuthTab(tab) {
       currentAuthTab = tab;
-      const signinBtn = document.getElementById('tabSignInBtn');
-      const signupBtn = document.getElementById('tabSignUpBtn');
+      const signInBtn = document.getElementById('tabSignInBtn');
+      const signUpBtn = document.getElementById('tabSignUpBtn');
       const usernameRow = document.getElementById('authUsernameRow');
       const submitLabel = document.getElementById('btnAuthSubmitLabel');
 
       if (tab === 'signin') {
-        signinBtn.classList.add('active');
-        signupBtn.classList.remove('active');
-        usernameRow.style.display = 'none';
-        submitLabel.innerText = currentLang === 'ar' ? 'تسجيل الدخول' : 'Sign In';
+        if (signInBtn) signInBtn.classList.add('active');
+        if (signUpBtn) signUpBtn.classList.remove('active');
+        if (usernameRow) usernameRow.style.display = 'none';
+        if (submitLabel) submitLabel.innerText = currentLang === 'ar' ? 'تسجيل الدخول' : 'Sign In';
       } else {
-        signinBtn.classList.remove('active');
-        signupBtn.classList.add('active');
-        usernameRow.style.display = 'block';
-        submitLabel.innerText = currentLang === 'ar' ? 'إنشاء حساب جديد' : 'Create Account';
+        if (signUpBtn) signUpBtn.classList.add('active');
+        if (signInBtn) signInBtn.classList.remove('active');
+        if (usernameRow) usernameRow.style.display = 'block';
+        if (submitLabel) submitLabel.innerText = currentLang === 'ar' ? 'إنشاء حساب جديد' : 'Create Account';
       }
     }
 
     function submitAuth() {
       const email = document.getElementById('authEmailInput').value.trim();
       const name = document.getElementById('authUsernameInput').value.trim() || 'فادي ناصر';
-      
       if (!email) {
         showToast(currentLang === 'ar' ? 'الرجاء إدخال البريد الإلكتروني' : 'Please enter your email', 'error');
         return;
       }
-
       isLoggedIn = true;
       document.getElementById('authLoggedOutCard').style.display = 'none';
       document.getElementById('authLoggedInCard').style.display = 'block';
       document.getElementById('profileName').innerText = name;
       document.getElementById('profileEmail').innerText = email;
       document.getElementById('userAvatar').innerText = name.charAt(0);
-
       showToast(currentLang === 'ar' ? ('مرحباً بك يا ' + name + '! تم تسجيل الدخول بنجاح') : ('Welcome ' + name + '! Signed in successfully'), 'success');
     }
 
     function demoQuickLogin() {
-      document.getElementById('authEmailInput').value = 'Fadiyano44@gmail.com';
-      document.getElementById('authUsernameInput').value = 'فادي ناصر';
       submitAuth();
     }
 
@@ -2012,18 +2360,15 @@
       showToast(currentLang === 'ar' ? 'تم تسجيل الخروج بنجاح' : 'Logged out successfully', 'info');
     }
 
-    // Terms Handler
+    // Terms
     function acceptTerms() {
       isTermsAccepted = true;
-      const btn = document.getElementById('btnAcceptTerms');
       const label = document.getElementById('btnAcceptTermsLabel');
-      const icon = document.getElementById('acceptTermsIcon');
-      if (btn) {
-        btn.style.background = 'var(--success)';
-      }
+      const btn = document.getElementById('btnAcceptTerms');
       if (label) {
         label.innerText = currentLang === 'ar' ? '✓ تمت الموافقة على الشروط والسياسة' : '✓ Terms & Privacy Accepted';
       }
+      if (btn) btn.style.background = 'var(--success)';
       showToast(currentLang === 'ar' ? '✓ تم حفظ وتأكيد موافقتك على الشروط بنجاح' : '✓ Terms & Privacy Accepted', 'success');
     }
 
@@ -2059,9 +2404,30 @@
     setInterval(updateClock, 30000);
     updateClock();
 
+    // Auto-detect deployment language preference (?lang=en, /en route, localStorage, or browser)
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramLang = urlParams.get('lang');
+      const isPathEn = window.location.pathname.startsWith('/en');
+      const savedLang = localStorage.getItem('nahwifix_lang');
+      if (paramLang === 'en' || isPathEn || (!paramLang && savedLang === 'en') || (!paramLang && !savedLang && navigator.language && navigator.language.startsWith('en'))) {
+        setLanguage('en');
+      } else {
+        setLanguage('ar');
+      }
+    } catch (e) {
+      setLanguage('ar');
+    }
+
     // Initial Execution
     runCheck(false);
     updateReaderDisplay();
   </script>
 </body>
+
+  <!-- Vercel Speed Insights -->
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
 </html>
