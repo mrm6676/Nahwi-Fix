@@ -89,7 +89,7 @@ def route_request(path_str, query_str="", headers=None):
             return 200, [("Content-Type", ctype)], data
 
     # 4. Evaluation dataset PDF
-    if clean_path in ("/evaluation_dataset.pdf", "/dataset.pdf", "/download/evaluation_dataset.pdf"):
+    if clean_path in ("/evaluation_dataset.pdf", "/dataset.pdf", "/download/evaluation_dataset.pdf", "/evaluation_dataset_en.pdf"):
         target = os.path.join(BASE_DIR, "evaluation_dataset.pdf")
         data, ctype = get_file_response(target, "application/pdf")
         if data:
@@ -115,8 +115,13 @@ def route_request(path_str, query_str="", headers=None):
     # 6. Static files by explicit filename at root
     static_files = {
         "/favicon-1500w.png": ("favicon-1500w.png", "image/png"),
-        "/favicon.png": ("favicon-1500w.png", "image/png"),
-        "/favicon.ico": ("favicon-1500w.png", "image/png"),
+        "/favicon.png": ("favicon.png", "image/png"),
+        "/favicon.ico": ("favicon.ico", "image/x-icon"),
+        "/favicon.svg": ("favicon.svg", "image/svg+xml"),
+        "/favicon-192.png": ("favicon-192.png", "image/png"),
+        "/favicon-512.png": ("favicon-512.png", "image/png"),
+        "/logo.png": ("logo.png", "image/png"),
+        "/logo.svg": ("logo.svg", "image/svg+xml"),
         "/robots.txt": ("robots.txt", "text/plain; charset=utf-8"),
         "/sitemap.xml": ("sitemap.xml", "application/xml; charset=utf-8"),
         "/llms.txt": ("llms.txt", "text/plain; charset=utf-8"),

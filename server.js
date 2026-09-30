@@ -53,7 +53,30 @@ const server = http.createServer((req, res) => {
       return;
     }
   }
-  if (req.url === '/evaluation_dataset.pdf' || req.url === '/dataset.pdf' || req.url === '/download/evaluation_dataset.pdf') {
+  const staticIcons = {
+    '/favicon.ico': { file: 'favicon.ico', type: 'image/x-icon' },
+    '/favicon.png': { file: 'favicon.png', type: 'image/png' },
+    '/favicon.svg': { file: 'favicon.svg', type: 'image/svg+xml' },
+    '/favicon-192.png': { file: 'favicon-192.png', type: 'image/png' },
+    '/favicon-512.png': { file: 'favicon-512.png', type: 'image/png' },
+    '/favicon-1500w.png': { file: 'favicon-1500w.png', type: 'image/png' },
+    '/logo.png': { file: 'logo.png', type: 'image/png' },
+    '/logo.svg': { file: 'logo.svg', type: 'image/svg+xml' }
+  };
+  if (staticIcons[req.url]) {
+    const assetPath = path.join(__dirname, staticIcons[req.url].file);
+    if (fs.existsSync(assetPath)) {
+      const stat = fs.statSync(assetPath);
+      res.writeHead(200, {
+        'Content-Type': staticIcons[req.url].type,
+        'Content-Length': stat.size,
+        'Cache-Control': 'public, max-age=86400'
+      });
+      fs.createReadStream(assetPath).pipe(res);
+      return;
+    }
+  }
+  if (req.url === '/evaluation_dataset.pdf' || req.url === '/dataset.pdf' || req.url === '/download/evaluation_dataset.pdf' || req.url === '/evaluation_dataset_en.pdf') {
     const pdfPath = path.join(__dirname, 'evaluation_dataset.pdf');
     if (fs.existsSync(pdfPath)) {
       const stat = fs.statSync(pdfPath);
