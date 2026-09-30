@@ -69,7 +69,12 @@ const server = http.createServer((req, res) => {
 
   // Serve index.html dynamically
   if (fs.existsSync(indexPath)) {
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
     fs.createReadStream(indexPath).pipe(res);
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });

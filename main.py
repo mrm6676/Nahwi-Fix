@@ -135,7 +135,14 @@ def route_request(path_str, query_str="", headers=None):
         if os.path.isfile(index_path):
             data, ctype = get_file_response(index_path, "text/html; charset=utf-8")
             if data:
-                return 200, [("Content-Type", ctype), ("Content-Length", str(len(data)))], data
+                headers = [
+                    ("Content-Type", ctype),
+                    ("Content-Length", str(len(data))),
+                    ("Cache-Control", "no-cache, no-store, must-revalidate"),
+                    ("Pragma", "no-cache"),
+                    ("Expires", "0")
+                ]
+                return 200, headers, data
 
     # 8. Fallback to server.js extraction if index.html is missing
     server_js_path = os.path.join(BASE_DIR, "server.js")
