@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NahwiFix - مصحح النحو والترقيم العربي</title>
+  <title>Nahwi Fix - مصحح النحو والترقيم العربي</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
   <link rel="apple-touch-icon" sizes="192x192" href="/favicon-192.png">
@@ -90,20 +90,22 @@
     }
     .logo-badge { display: flex; align-items: center; gap: 8px; cursor: pointer; }
     .logo-icon {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      background: #2ACB96;
-      background: linear-gradient(135deg, #2ACB96 0%, #10B981 100%);
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #FFFFFF;
-      font-weight: 800;
-      font-size: 18px;
-      line-height: 1;
-      box-shadow: 0 2px 8px rgba(42, 203, 150, 0.4);
       flex-shrink: 0;
+      overflow: hidden;
+      filter: drop-shadow(0 2px 8px rgba(37, 99, 235, 0.5));
+    }
+    .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
     }
     .header-actions { display: flex; gap: 8px; }
     
@@ -537,15 +539,17 @@
 
   <div class="device-frame">
     <div class="status-bar">
-      <span>NahwiFix Live Interactive Demo</span>
+      <span>Nahwi Fix Live Interactive Demo</span>
     </div>
     <header>
-      <div class="logo-badge" onclick="switchNav('Checker')">
-        <div class="logo-icon">ن</div>
+      <div class="logo-badge" onclick="switchNav('Checker')" title="NahwiFix">
+        <div class="logo-icon">
+          <img src="/logo.png" alt="NahwiFix Logo" id="mainHeaderLogo">
+        </div>
         <strong>NahwiFix</strong>
       </div>
       <div class="header-actions">
-        <a href="/slides" class="icon-btn" title="عرض تقديمي عن المشروع / Presentation Slides" style="background:linear-gradient(135deg, rgba(0,77,64,0.15), rgba(16,185,129,0.2)); border-color:var(--primary); font-weight:bold;">
+        <a href="/slides" class="icon-btn" id="btnHeaderSlides" onclick="openSlidesPresentation(event)" title="عرض تقديمي عن المشروع / Presentation Slides" style="background:linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%); border-color:#60A5FA; color:#FFFFFF; font-weight:800; box-shadow:0 3px 10px rgba(37,99,235,0.4); text-decoration:none;">
           <span>📽️</span> <span class="nav-label" data-ar="العرض" data-en="Slides">العرض</span>
         </a>
         <a href="/evaluation_dataset.pdf" target="_blank" download="NahwiFix_Evaluation_Dataset.pdf" class="icon-btn" title="تحميل ملف بيانات التقييم (PDF) / Download Evaluation Dataset">
@@ -977,6 +981,45 @@
           </div>
         </div>
       </div>
+
+      <!-- SLIDES VIEW (Interactive Presentation Section) -->
+      <div id="viewSlides" class="view-container">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <h3 id="slidesSectionTitle" style="color:var(--text); display:flex; align-items:center; gap:8px; font-size:16px;">
+            <span>📽️</span> عرض شرائح مشروع NahwiFix
+          </h3>
+          <a href="/slides" target="_blank" class="btn-primary" style="background:linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%) !important; color:#fff !important; border:1px solid #60A5FA !important; padding:6px 14px; border-radius:10px; font-size:12px; text-decoration:none; font-weight:bold; box-shadow:0 3px 10px rgba(37,99,235,0.4); display:inline-flex; align-items:center; gap:6px;">
+            ⛶ فتح كامل الشاشة
+          </a>
+        </div>
+        
+        <div class="slides-interactive-box" style="background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:18px; box-shadow:0 6px 20px rgba(0,0,0,0.08);">
+          <!-- Slide Preview Container -->
+          <div id="inAppSlideContent" style="min-height:260px;">
+            <!-- Rendered by JavaScript -->
+          </div>
+          
+          <!-- Slide Indicator & Blue Action Buttons in this section -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; gap:8px;">
+              <button class="btn-primary" id="btnInAppPrev" onclick="prevInAppSlide()" style="background:linear-gradient(135deg, #1E40AF 0%, #2563EB 100%) !important; border:1px solid #3B82F6 !important; color:#fff !important; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer; box-shadow:0 3px 10px rgba(37,99,235,0.35);">
+                <span>➡</span> الشريحة السابقة
+              </button>
+              <button class="btn-primary" id="btnInAppNext" onclick="nextInAppSlide()" style="background:linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%) !important; border:1px solid #60A5FA !important; color:#fff !important; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer; box-shadow:0 4px 12px rgba(37,99,235,0.4);">
+                الشريحة التالية <span>⬅</span>
+              </button>
+            </div>
+            
+            <span id="inAppSlideCounter" style="font-weight:bold; font-size:13px; color:var(--text-muted);">شريحة 1 من 7</span>
+            
+            <div style="display:flex; gap:8px;">
+              <a href="/slides" class="btn-primary" style="background:linear-gradient(135deg, #2563EB 0%, #3B82F6 100%) !important; border:1px solid #93C5FD !important; color:#fff !important; padding:8px 16px; border-radius:10px; font-weight:bold; text-decoration:none; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(37,99,235,0.35);">
+                🚀 صفحة العرض
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- BOTTOM NAVIGATION -->
@@ -992,6 +1035,10 @@
       <button class="nav-item" onclick="switchNav('Pricing', this)" data-nav="Pricing">
         <span style="font-size:18px;">💳</span>
         <span class="nav-label" data-ar="الأسعار" data-en="Pricing">الأسعار</span>
+      </button>
+      <button class="nav-item" onclick="switchNav('Slides', this)" data-nav="Slides" id="navSlidesBtn">
+        <span style="font-size:18px;">📽️</span>
+        <span class="nav-label" data-ar="العرض" data-en="Slides">العرض</span>
       </button>
       <button class="nav-item" onclick="switchNav('Account', this)" data-nav="Account">
         <span style="font-size:18px;">👤</span>
@@ -2058,6 +2105,10 @@
       const targetView = document.getElementById('view' + name);
       if (targetView) targetView.classList.add('active');
 
+      if (name === 'Slides') {
+        renderInAppSlide();
+      }
+
       let buttonEl = el;
       if (!buttonEl && typeof event !== 'undefined' && event && event.target) {
         buttonEl = (event.target.closest ? event.target.closest('.nav-item') : null) || event.target;
@@ -2071,6 +2122,149 @@
 
       const scrollContainer = document.querySelector ? document.querySelector('.main-scroll') : null;
       if (scrollContainer && scrollContainer.scrollTo) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // In-App Interactive Slides Logic
+    let currentInAppSlide = 1;
+    const totalInAppSlides = 7;
+
+    const inAppSlidesData = [
+      {
+        badge: "✨ المشروع الرسمي | Official Project Overview",
+        title: "NahwiFix: المساعد الذكي لتدقيق النحو والترقيم العربي",
+        desc: "حل برمجي متكامل يجمع بين محرك التدقيق النحوي المحلي الفائق السرعة ونماذج الذكاء الاصطناعي (Gemini)، مع دعم شامل للأجهزة المحمولة عبر Android Jetpack Compose وتجربة ويب تفاعلية ميسرة بالصوت وإمكانية الوصول.",
+        items: [
+          { icon: "⚡", title: "تدقيق محلي فائق السرعة", text: "استجابة فورية أقل من 15 مللي ثانية لمعالجة النصوص." },
+          { icon: "🔒", title: "خصوصية كاملة 100%", text: "معالجة محلية بالكامل وحفظ في قاعدة بيانات مشفرة." },
+          { icon: "🤖", title: "ذكاء اصطناعي مدمج", text: "إعادة صياغة واقتراح التشكيل عبر Gemini." }
+        ]
+      },
+      {
+        badge: "⚠️ التحدي اللغوي والتقني",
+        title: "لماذا صُمم NahwiFix؟ المشكلة والاحتياج",
+        desc: "تفتقر معظم أدوات التدقيق الحالية للخصوصية والسرعة في فهم خصوصية تراكيب لغة الضاد المعقدة، مثل إعراب الأسماء الخمسة، تمييز همزتي الوصل والقطع، وعلامات الترقيم العربية الأصيلة.",
+        items: [
+          { icon: "🧩", title: "أخطاء الإملاء والهمزات", text: "الخلط بين همزتي الوصل والقطع والتاء المربوطة." },
+          { icon: "⚖️", title: "مطابقة الفعل والمبتدأ", text: "عدم مطابقة التذكير والتأنيث وزيادة تنوين النصب." },
+          { icon: "♿", title: "إمكانية الوصول وذوي الهمم", text: "توفير النطق الصوتي وتكبير الخط والإملاء." }
+        ]
+      },
+      {
+        badge: "⚙️ البنية المعمارية والتقنية",
+        title: "البنية الهندسية وتكامل المنصات",
+        desc: "صُمم المشروع ليعمل عبر بيئتين متكاملتين: تطبيق أندرويد رائد ونظام ويب تفاعلي سريع دون أي تضارب.",
+        items: [
+          { icon: "📱", title: "Android Jetpack Compose", text: "واجهات حديثة تدعم Material 3، مظهر داكن وديناميكي." },
+          { icon: "💾", title: "Room Database مشفرة", text: "حفظ سجلات التدقيق والمستندات محلياً Offline-First." },
+          { icon: "🌐", title: "منظومة ويب متجاوبة", text: "دعم فوري لكافة المتصفحات والشاشات." }
+        ]
+      },
+      {
+        badge: "⚡ إمكانيات المحرك",
+        title: "محرك القواعد والترقيم التلقائي (ArabicGrammarEngine)",
+        desc: "خوارزميات فحص متقدمة تغطي القواعد النحوية والإملائية مع تقديم تفنيد وشرح تعليمي وافٍ لكل خطأ.",
+        items: [
+          { icon: "✓", title: "همزة القطع والوصل", text: "أكثر من 80 كلمة مفتاحية شائعة تصحح تلقائياً." },
+          { icon: "✓", title: "قواعد الترقيم والواو", text: "التصاق الفواصل وإلغاء المسافات الزائدة بعد الواو." },
+          { icon: "✓", title: "مطابقة التذكير والتأنيث", text: "مراعاة مطابقة الأفعال للمبتدأ الفعلي." }
+        ]
+      },
+      {
+        badge: "✨ القارئ الذكي والصوتيات",
+        title: "إمكانية الوصول (Accessibility) والصوتيات",
+        desc: "تجربة شاملة تراعي كافة فئات المستخدمين بتوفير أدوات قراءة ونطق وإملاء صوتي باللغة العربية.",
+        items: [
+          { icon: "🔊", title: "نطق النصوص (TTS)", text: "قراءة فصيحة ومحددة السرعة لمساعدة المتعلمين." },
+          { icon: "🎤", title: "الإملاء الصوتي التفاعلي", text: "إمكانية كتابة المقالات وتدقيقها صوتياً بالمايكروفون." },
+          { icon: "📄", title: "تصدير تقييم PDF", text: "تحميل ومشاركة تقارير الفحص والبيانات التدريبية." }
+        ]
+      },
+      {
+        badge: "💳 نموذج العمل والاشتراكات",
+        title: "الخطط والأسعار وقابلية التوسع",
+        desc: "نموذج اشتراكات مدروس يخدم الأفراد، المحترفين، والمؤسسات التعليمية والإعلامية.",
+        items: [
+          { icon: "🌱", title: "الأساسية (Free)", text: "مجانية دائماً - 1,000 كلمة لكل فحص وسجل محلي." },
+          { icon: "⭐", title: "الاحترافية (Pro)", text: "$9/شهرياً - فحص غير محدود وتشكيل كامل بالحركات." },
+          { icon: "🏢", title: "المؤسسات (Enterprise)", text: "$29/شهرياً - تراخيص للجامعات ودور النشر وAPI." }
+        ]
+      },
+      {
+        badge: "🚀 الخاتمة والرؤية المستقبلية",
+        title: "الآفاق المستقبلية للمشروع",
+        desc: "خطط التطوير المستمرة لتحويل NahwiFix إلى المنصة العربية الأولى في السلامة اللغوية.",
+        items: [
+          { icon: "🌐", title: "إضافات للمتصفحات (Extension)", text: "تطوير إضافة لـ Chrome و Edge و Word للتصحيح المباشر." },
+          { icon: "🎓", title: "وضع التعلم التفاعلي للطلاب", text: "ألعاب واختبارات لغوية قصيرة مدمجة في التطبيق." },
+          { icon: "🚀", title: "انطلق الآن مع NahwiFix", text: "ابدأ الفحص المباشر واستمتع بنصوص عربية سليمة!" }
+        ]
+      }
+    ];
+
+    function renderInAppSlide() {
+      const container = document.getElementById('inAppSlideContent');
+      const counter = document.getElementById('inAppSlideCounter');
+      const btnPrev = document.getElementById('btnInAppPrev');
+      const btnNext = document.getElementById('btnInAppNext');
+      if (!container) return;
+
+      const slide = inAppSlidesData[currentInAppSlide - 1];
+      if (!slide) return;
+
+      if (counter) counter.innerText = currentLang === 'ar' ? `شريحة ${currentInAppSlide} من ${totalInAppSlides}` : `Slide ${currentInAppSlide} of ${totalInAppSlides}`;
+      if (btnPrev) btnPrev.style.opacity = currentInAppSlide === 1 ? '0.5' : '1';
+      if (btnNext) {
+        if (currentInAppSlide === totalInAppSlides) {
+          btnNext.innerHTML = currentLang === 'ar' ? 'البداية 🔄' : 'Restart 🔄';
+        } else {
+          btnNext.innerHTML = currentLang === 'ar' ? 'التالية ⬅' : 'Next ⬅';
+        }
+      }
+
+      let itemsHtml = '';
+      slide.items.forEach(it => {
+        itemsHtml += `
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:12px; flex:1; min-width:180px;">
+            <div style="font-size:18px; margin-bottom:4px;">${it.icon}</div>
+            <strong style="display:block; font-size:13px; margin-bottom:4px; color:var(--text);">${it.title}</strong>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.5;">${it.text}</p>
+          </div>
+        `;
+      });
+
+      container.innerHTML = `
+        <div style="animation: fadeIn 0.25s ease;">
+          <span style="display:inline-block; font-size:11px; font-weight:bold; color:#2563EB; background:rgba(37,99,235,0.12); padding:4px 10px; border-radius:20px; border:1px solid rgba(37,99,235,0.25); margin-bottom:8px;">${slide.badge}</span>
+          <h4 style="font-size:16px; font-weight:800; margin-bottom:8px; color:var(--text);">${slide.title}</h4>
+          <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:14px;">${slide.desc}</p>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            ${itemsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function nextInAppSlide() {
+      if (currentInAppSlide < totalInAppSlides) {
+        currentInAppSlide++;
+      } else {
+        currentInAppSlide = 1;
+      }
+      renderInAppSlide();
+    }
+
+    function prevInAppSlide() {
+      if (currentInAppSlide > 1) {
+        currentInAppSlide--;
+        renderInAppSlide();
+      }
+    }
+
+    function openSlidesPresentation(e) {
+      if (e) e.preventDefault();
+      switchNav('Slides');
+      renderInAppSlide();
+      showToast(currentLang === 'ar' ? 'تم فتح قسم عرض الشرائح' : 'Opened Slides Presentation', 'info');
     }
 
     // Reader Mode & Accessibility Functions
