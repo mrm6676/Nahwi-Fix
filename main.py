@@ -73,6 +73,27 @@ def route_request(path_str, query_str="", headers=None):
     if clean_path in ("/health", "/api/health"):
         return 200, [("Content-Type", "text/plain; charset=utf-8")], b"OK"
 
+    # 1.5. Text-to-Speech audio streaming proxy
+    if clean_path in ("/api/tts", "/tts"):
+        from urllib.request import Request, urlopen
+        from urllib.parse import quote
+        parsed_qs = parse_qs(query_str)
+        text = parsed_qs.get("text", parsed_qs.get("q", ["مرحبا"]))[0]
+        lang = parsed_qs.get("lang", ["ar"])[0]
+        clean_text = text[:500]
+        tts_url = f"https://translate.google.com/translate_tts?ie=UTF-8&tl={quote(lang)}&client=tw-ob&q={quote(clean_text)}"
+        try:
+            req = Request(tts_url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+            with urlopen(req, timeout=8) as resp:
+                data = resp.read()
+            return 200, [
+                ("Content-Type", "audio/mpeg"),
+                ("Cache-Control", "public, max-age=86400"),
+                ("Access-Control-Allow-Origin", "*")
+            ], data
+        except Exception:
+            return 500, [("Content-Type", "application/json")], b'{"error":"TTS stream unavailable"}'
+
     # 2. English Slides presentation
     if (clean_path in ("/slides_en", "/slides-en", "/slides_en.html", "/presentation/en")
             or (clean_path in ("/slides", "/presentation") and "lang=en" in query_str)):

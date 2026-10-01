@@ -682,6 +682,9 @@
               </button>
             </div>
             <div style="display:flex; gap:6px;">
+              <button class="icon-btn" onclick="speakCurrentText()" id="btnSpeakMainEditor" title="قراءة النص بصوت واضح / Read text aloud" style="color:var(--grammar); font-weight:bold;">
+                <span>🔊</span> <span class="nav-label" data-ar="نطق" data-en="Speak">نطق</span>
+              </button>
               <button class="icon-btn" onclick="pasteFromClipboard()" id="btnPasteMain" title="لصق النص">
                 <span>📋</span> لصق
               </button>
@@ -2328,48 +2331,195 @@
       });
     }
 
-    // Text to Speech
-    function speakCurrentText() {
-      const text = document.getElementById('textInput').value.trim() || 'ذهب محمدٌ إلى المدرسةِ، وهو يحملُ كتبَه وشاهدَ عصفوراً جميلاً.';
+    // Robust Text to Speech Engine (Native SpeechSynthesis + Audio Fallback)
+    let isCurrentlySpeaking = false;
+    let currentAudioPlayer = null;
+    let availableVoices = [];
+
+    function populateVoices() {
       if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'ar-SA';
-        utterance.rate = 0.9;
-        
-        utterance.onstart = () => {
-          isCurrentlySpeaking = true;
-          const lbl = document.getElementById('btnSpeakLabel');
-          if (lbl) lbl.innerText = currentLang === 'ar' ? 'جارٍ النطق الآن...' : 'Speaking...';
-          showToast('🔊 ' + (currentLang === 'ar' ? 'جارٍ النطق الصوتي الآن...' : 'Reading aloud...'), 'info');
-        };
-
-        utterance.onend = () => {
-          isCurrentlySpeaking = false;
-          const lbl = document.getElementById('btnSpeakLabel');
-          if (lbl) lbl.innerText = currentLang === 'ar' ? 'انطق النص الآن' : 'Read Aloud Now';
-        };
-
-        utterance.onerror = () => {
-          isCurrentlySpeaking = false;
-          const lbl = document.getElementById('btnSpeakLabel');
-          if (lbl) lbl.innerText = currentLang === 'ar' ? 'انطق النص الآن' : 'Read Aloud Now';
-        };
-
-        window.speechSynthesis.speak(utterance);
-      } else {
-        showToast('ميزة النطق الصوتي غير مدعومة في متصفحك', 'error');
+        try {
+          availableVoices = window.speechSynthesis.getVoices() || [];
+        } catch (e) {
+          availableVoices = [];
+        }
       }
     }
 
-    function stopSpeaking() {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
+    if ('speechSynthesis' in window) {
+      populateVoices();
+      if (typeof window.speechSynthesis.onvoiceschanged !== 'undefined') {
+        window.speechSynthesis.onvoiceschanged = populateVoices;
       }
-      isCurrentlySpeaking = false;
+    }
+
+    function getBestArabicVoice() {
+      if (!availableVoices.length) populateVoices();
+      return availableVoices.find(v => v.lang && (v.lang.startsWith('ar') || v.lang.toLowerCase().includes('ar-sa') || v.lang.toLowerCase().includes('ar-eg')))
+          || availableVoices.find(v => v.name && (v.name.toLowerCase().includes('arabic') || v.name.includes('عربي') || v.name.toLowerCase().includes('maged') || v.name.toLowerCase().includes('laila') || v.name.toLowerCase().includes('tarik')));
+    }
+
+    function updateSpeakingUI(speaking) {
+      isCurrentlySpeaking = speaking;
       const lbl = document.getElementById('btnSpeakLabel');
-      if (lbl) lbl.innerText = currentLang === 'ar' ? 'انطق النص الآن' : 'Read Aloud Now';
-      showToast(currentLang === 'ar' ? 'تم إيقاف النطق' : 'Stopped audio', 'info');
+      const btn = document.getElementById('btnSpeakText');
+      if (lbl) {
+        lbl.innerText = speaking 
+          ? (currentLang === 'ar' ? 'جارٍ النطق الآن...' : 'Speaking...') 
+          : (currentLang === 'ar' ? 'انطق النص الآن' : 'Read Aloud Now');
+      }
+      if (btn) {
+        btn.style.animation = speaking ? 'pulseBadge 1.2s infinite alternate' : 'none';
+        btn.style.filter = speaking ? 'brightness(1.18)' : 'none';
+      }
+    }
+
+    function speakWithAudioFallback(text) {
+      stopSpeaking(false);
+      const clean = text.trim();
+      if (!clean) return;
+
+      // Split into chunks of reasonable size for smooth audio streaming
+      const chunks = clean.match(/[^.!؟،\n]+[.!?،\n]?/g) || [clean];
+      let chunkIndex = 0;
+
+      updateSpeakingUI(true);
+      showToast('🔊 ' + (currentLang === 'ar' ? 'جارٍ قراءة النص صوتياً...' : 'Reading text aloud...'), 'info');
+
+      function playNextChunk() {
+        if (!isCurrentlySpeaking || chunkIndex >= chunks.length) {
+          stopSpeaking(false);
+          return;
+        }
+        const currentChunk = chunks[chunkIndex].trim();
+        chunkIndex++;
+        if (!currentChunk) {
+          playNextChunk();
+          return;
+        }
+
+        const ttsUrl = `/api/tts?text=${encodeURIComponent(currentChunk)}&lang=ar`;
+        const audio = new Audio(ttsUrl);
+        currentAudioPlayer = audio;
+
+        audio.onended = () => {
+          playNextChunk();
+        };
+
+        audio.onerror = () => {
+          // Direct Google TTS link as secondary fallback
+          const directUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ar&client=tw-ob&q=${encodeURIComponent(currentChunk)}`;
+          const directAudio = new Audio(directUrl);
+          currentAudioPlayer = directAudio;
+          directAudio.onended = () => playNextChunk();
+          directAudio.onerror = () => {
+            showToast(currentLang === 'ar' ? 'تعذر تشغيل الصوت في المتصفح' : 'Could not play audio', 'error');
+            stopSpeaking(false);
+          };
+          directAudio.play().catch(() => stopSpeaking(false));
+        };
+
+        audio.play().catch((err) => {
+          console.warn('Audio play interrupted or autoplay restricted:', err);
+          stopSpeaking(false);
+        });
+      }
+
+      playNextChunk();
+    }
+
+    function speakCurrentText(explicitText) {
+      const textInputVal = document.getElementById('textInput') ? document.getElementById('textInput').value.trim() : '';
+      const readerBoxVal = document.getElementById('readerDisplayBox') ? document.getElementById('readerDisplayBox').innerText.trim() : '';
+      const defaultSample = 'ذهب محمدٌ إلى المدرسةِ، وهو يحملُ كتبَه وشاهدَ عصفوراً جميلاً.';
+      
+      const text = (typeof explicitText === 'string' && explicitText.trim()) 
+          ? explicitText.trim() 
+          : (textInputVal || readerBoxVal || defaultSample);
+
+      if (!text) {
+        showToast(currentLang === 'ar' ? 'لا يوجد نص لقراءته' : 'No text to read', 'info');
+        return;
+      }
+
+      stopSpeaking(false);
+
+      // Attempt native SpeechSynthesis if an Arabic voice exists
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          if (window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+          }
+        } catch (e) {}
+
+        const arabicVoice = getBestArabicVoice();
+        if (arabicVoice) {
+          try {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.voice = arabicVoice;
+            utterance.lang = arabicVoice.lang || 'ar-SA';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+            window.__activeSpeechUtterance = utterance; // Prevent garbage collection in V8
+
+            let started = false;
+            utterance.onstart = () => {
+              started = true;
+              updateSpeakingUI(true);
+              showToast('🔊 ' + (currentLang === 'ar' ? 'جارٍ النطق الصوتي الآن...' : 'Reading aloud...'), 'info');
+            };
+
+            utterance.onend = () => {
+              stopSpeaking(false);
+            };
+
+            utterance.onerror = (e) => {
+              console.warn('Native speech error, falling back to audio stream...', e);
+              speakWithAudioFallback(text);
+            };
+
+            setTimeout(() => {
+              window.speechSynthesis.speak(utterance);
+              setTimeout(() => {
+                if (!started && isCurrentlySpeaking) {
+                  // If SpeechSynthesis didn't start (silent drop in browser), use audio fallback
+                  speakWithAudioFallback(text);
+                }
+              }, 700);
+            }, 60);
+
+            updateSpeakingUI(true);
+            return;
+          } catch (err) {
+            console.warn('SpeechSynthesis error:', err);
+          }
+        }
+      }
+
+      // Fallback: Audio streaming playback
+      speakWithAudioFallback(text);
+    }
+
+    function stopSpeaking(showNotification = true) {
+      isCurrentlySpeaking = false;
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+        } catch (e) {}
+      }
+      if (currentAudioPlayer) {
+        try {
+          currentAudioPlayer.pause();
+          currentAudioPlayer.currentTime = 0;
+        } catch (e) {}
+        currentAudioPlayer = null;
+      }
+      window.__activeSpeechUtterance = null;
+      updateSpeakingUI(false);
+      if (showNotification) {
+        showToast(currentLang === 'ar' ? 'تم إيقاف النطق' : 'Stopped audio', 'info');
+      }
     }
 
     // Real-Time Web Speech Dictation

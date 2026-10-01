@@ -144,13 +144,26 @@ class NahwiFixViewModel(application: Application) : AndroidViewModel(application
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             val tts = textToSpeech ?: return
-            // Try Arabic locale first
-            val arLocale = Locale("ar")
-            val result = tts.setLanguage(arLocale)
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                // Fallback to default or English
-                tts.setLanguage(Locale.getDefault())
+            var configuredLocale = false
+            val arabicLocales = listOf(
+                Locale("ar", "SA"),
+                Locale.forLanguageTag("ar-SA"),
+                Locale("ar", "EG"),
+                Locale("ar")
+            )
+            for (loc in arabicLocales) {
+                val avail = tts.isLanguageAvailable(loc)
+                if (avail >= TextToSpeech.LANG_AVAILABLE) {
+                    tts.setLanguage(loc)
+                    configuredLocale = true
+                    break
+                }
             }
+            if (!configuredLocale) {
+                tts.setLanguage(Locale("ar", "SA"))
+            }
+            tts.setSpeechRate(0.92f)
+            tts.setPitch(1.0f)
             tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
                 override fun onStart(utteranceId: String?) {
                     _isSpeaking.value = true
@@ -166,8 +179,10 @@ class NahwiFixViewModel(application: Application) : AndroidViewModel(application
                 }
             })
             _isTtsReady.value = true
+            Log.d("NahwiFixViewModel", "Arabic TTS successfully initialized")
         } else {
             _isTtsReady.value = false
+            Log.w("NahwiFixViewModel", "TTS onInit failed with status $status")
         }
     }
 
@@ -205,20 +220,28 @@ class NahwiFixViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun speakText(textToRead: String) {
-        val cleanText = textToRead.trim()
-        if (cleanText.isEmpty()) return
+        val targetText = textToRead.ifBlank { _inputText.value }.ifBlank {
+            "ذهب محمدٌ إلى المدرسةِ، وهو يحملُ كتبَه وشاهدَ عصفوراً جميلاً."
+        }.trim()
+
+        if (textToSpeech == null) {
+            initTts(getApplication())
+        }
 
         val tts = textToSpeech
-        if (tts != null && _isTtsReady.value) {
+        if (tts != null) {
             _isSpeaking.value = true
             tts.stop()
             val params = android.os.Bundle()
             params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "NAHWI_READER_${System.currentTimeMillis()}")
-            tts.speak(cleanText, TextToSpeech.QUEUE_FLUSH, params, "NAHWI_READER")
+            val queueResult = tts.speak(targetText, TextToSpeech.QUEUE_FLUSH, params, "NAHWI_READER")
+            if (queueResult == TextToSpeech.ERROR) {
+                tts.speak(targetText, TextToSpeech.QUEUE_FLUSH, null)
+            }
             _statusMessage.value = if (_language.value == AppLanguage.ARABIC)
-                "جارٍ الاستماع للنص..."
+                "🔊 جارٍ قراءة النص صوتياً..."
             else
-                "Reading text aloud..."
+                "🔊 Reading text aloud..."
         } else {
             _statusMessage.value = if (_language.value == AppLanguage.ARABIC)
                 "خدمة النطق الصوتي غير مفعلة على جهازك"

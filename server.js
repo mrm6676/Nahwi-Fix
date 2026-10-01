@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
@@ -14,6 +15,35 @@ const server = http.createServer((req, res) => {
     return;
   }
   const reqUrl = req.url || '/';
+
+  // Text-to-Speech audio streaming proxy for reliable Arabic reading
+  if (reqUrl.startsWith('/api/tts') || reqUrl.startsWith('/tts')) {
+    try {
+      const parsed = new URL(reqUrl, 'http://localhost');
+      const text = parsed.searchParams.get('text') || parsed.searchParams.get('q') || 'مرحبا';
+      const lang = parsed.searchParams.get('lang') || 'ar';
+      const cleanText = text.substring(0, 500);
+      const googleTtsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${encodeURIComponent(lang)}&client=tw-ob&q=${encodeURIComponent(cleanText)}`;
+      
+      https.get(googleTtsUrl, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
+      }, (ttsRes) => {
+        res.writeHead(ttsRes.statusCode || 200, {
+          'Content-Type': 'audio/mpeg',
+          'Cache-Control': 'public, max-age=86400',
+          'Access-Control-Allow-Origin': '*'
+        });
+        ttsRes.pipe(res);
+      }).on('error', (err) => {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+      });
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
   if (reqUrl.startsWith('/slides_en') || reqUrl.startsWith('/slides-en') || reqUrl === '/presentation/en' || reqUrl === '/slides?lang=en') {
     const slidesPath = path.join(__dirname, 'slides_en.html');
     if (fs.existsSync(slidesPath)) {
